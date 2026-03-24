@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Login clicado", Toast.LENGTH_SHORT).show();
 
             // só pra testar navegação
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, EspacosActivity.class));
         });
 
         // Ir para cadastro

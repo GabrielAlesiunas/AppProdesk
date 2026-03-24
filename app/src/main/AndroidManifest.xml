@@ -1,10 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="SUA_API_KEY_AQUI" />
+    <!-- INTERNET -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- LOCALIZAÇÃO -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -15,33 +17,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ProDesk">
-        <activity
-            android:name=".EspacosActivity"
-            android:exported="false" />
-        <activity
-            android:name=".VerificacaoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".CadastroActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+        <activity android:name=".PerfilActivity" android:exported="false"/>
+        <activity android:name=".ReservaActivity" android:exported="false"/>
+        <activity android:name=".VerificacaoActivity" android:exported="false"/>
+        <activity android:name=".CadastroActivity" android:exported="false"/>
+
+        <!-- TELA INICIAL -->
+        <activity android:name=".LoginActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ReservasActivity"
-            android:exported="false" />
-        <activity
-            android:name=".DetalheActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true" />
+
+        <activity android:name=".ReservasActivity" android:exported="false"/>
+        <activity android:name=".DetalheActivity" android:exported="false"/>
+        <activity android:name=".HistoricoReservasActivity"/>
+
     </application>
 
 </manifest>
