@@ -2,23 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_home"
+        android:id="@+id/nav_home"
         android:title="Início"/>
 
     <item
-        android:id="@+id/menu_reservas"
-        android:title="Minhas Reservas"/>
+        android:id="@+id/nav_espacos"
+        android:title="Espaços"/>
 
     <item
-        android:id="@+id/menu_perfil"
+        android:id="@+id/nav_reservas"
+        android:title="Reservas"/>
+
+    <item
+        android:id="@+id/nav_perfil"
         android:title="Perfil"/>
-
-    <item
-        android:id="@+id/menu_mapa"
-        android:title="Mapa"/>
-
-    <item
-        android:id="@+id/menu_sair"
-        android:title="Sair"/>
 
 </menu>

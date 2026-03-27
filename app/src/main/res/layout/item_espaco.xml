@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:radius="12dp"
+    android:elevation="6dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- IMAGEM -->
+        <ImageView
+            android:id="@+id/imgEspaco"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_background"/>
+
+        <!-- NOME -->
+        <TextView
+            android:id="@+id/txtNome"
+            android:text="Nome do espaço"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#333"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- DESCRIÇÃO -->
+        <TextView
+            android:id="@+id/txtDescricao"
+            android:text="Descrição do espaço"
+            android:textSize="14sp"
+            android:textColor="#777"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- PREÇO -->
+        <TextView
+            android:id="@+id/txtPreco"
+            android:text="R$ 0,00 / hora"
+            android:textStyle="bold"
+            android:textColor="#000"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- BOTÃO VER MAIS-->
+        <Button
+            android:id="@+id/btnVerMais"
+            android:text="Ver mais"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#4A90E2"
+            android:textColor="#FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
