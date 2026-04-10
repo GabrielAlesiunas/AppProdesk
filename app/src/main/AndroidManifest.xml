@@ -46,6 +46,9 @@
             android:name=".DetalheActivity"
             android:exported="false" />
         <activity android:name=".HistoricoReservasActivity" />
+        <activity android:name=".CartaoActivity"/>
+        <activity android:name=".SenhaActivity"/>
+        <activity android:name=".RecuperarSenhaActivity"/>
     </application>
 
 </manifest>

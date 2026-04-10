@@ -10,7 +10,7 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText email, senha;
     Button btnLogin;
-    TextView btnCadastro;
+    TextView btnCadastro, btnEsqueciSenha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,16 +21,41 @@ public class LoginActivity extends AppCompatActivity {
         senha = findViewById(R.id.senha);
         btnLogin = findViewById(R.id.btnLogin);
         btnCadastro = findViewById(R.id.btnCadastro);
+        btnEsqueciSenha = findViewById(R.id.btnEsqueciSenha);
 
-        // Clique no botão Entrar
+        // LOGIN
         btnLogin.setOnClickListener(v -> {
-            Toast.makeText(this, "Login clicado", Toast.LENGTH_SHORT).show();
 
-            // só pra testar navegação
+            String emailTxt = email.getText().toString().trim();
+            String senhaTxt = senha.getText().toString().trim();
+
+            if (emailTxt.isEmpty()) {
+                email.setError("Digite o email");
+                return;
+            }
+
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailTxt).matches()) {
+                email.setError("Email inválido");
+                return;
+            }
+
+            if (senhaTxt.length() < 4) {
+                senha.setError("Senha muito curta");
+                return;
+            }
+
+            Toast.makeText(this, "Login realizado", Toast.LENGTH_SHORT).show();
+
             startActivity(new Intent(this, MainActivity.class));
+            finish();
         });
 
-        // Ir para cadastro
+        // ESQUECI SENHA
+        btnEsqueciSenha.setOnClickListener(v -> {
+            startActivity(new Intent(this, RecuperarSenhaActivity.class));
+        });
+
+        // CADASTRO
         btnCadastro.setOnClickListener(v -> {
             startActivity(new Intent(this, CadastroActivity.class));
         });

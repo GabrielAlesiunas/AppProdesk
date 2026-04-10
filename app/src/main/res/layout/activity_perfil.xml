@@ -1,122 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:padding="16dp"
+    <!-- CONTEÚDO -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:background="#F5F5F5">
 
-        <!-- FOTO + NOME -->
         <LinearLayout
             android:orientation="vertical"
-            android:gravity="center"
+            android:padding="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Dados Pessoais"
+                android:textColor="#050505"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <!-- FOTO -->
             <ImageView
                 android:id="@+id/imgPerfil"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:layout_gravity="center"
                 android:src="@drawable/ic_user"
-                android:background="#DDD"
-                android:scaleType="centerCrop"/>
+                android:background="@drawable/bg_circle"/>
 
             <Button
                 android:id="@+id/btnTrocarFoto"
-                android:text="Alterar foto"
-                android:layout_marginTop="8dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="Alterar foto"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"/>
 
+            <!-- NOME -->
             <TextView
                 android:id="@+id/txtNome"
-                android:text="Seu Nome"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginTop="8dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Nome: admin"
+                android:textColor="#000000" />
 
+            <!-- EMAIL -->
             <TextView
                 android:id="@+id/txtEmail"
-                android:text="email@email.com"
-                android:textColor="#666"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="Email: admin@gmail.com"
+                android:textColor="#070707" />
+
         </LinearLayout>
 
-        <!-- SEGURANÇA -->
+    </ScrollView>
+
+    <!-- MENU -->
+    <LinearLayout
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:padding="16dp">
+
         <TextView
-            android:text="Segurança"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_marginTop="20dp"
+            android:id="@+id/menuPerfil"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="Dados Pessoais"
+            android:textColor="#2196F3"
+            android:padding="10dp"/>
 
-        <Button
-            android:id="@+id/btnSenha"
-            android:text="Alterar senha"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <Switch
-            android:id="@+id/switch2FA"
-            android:text="Verificação em 2 etapas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <!-- PAGAMENTO -->
         <TextView
-            android:text="Pagamento"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_marginTop="20dp"
+            android:id="@+id/menuCartao"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="Cartão"
+            android:padding="10dp"/>
 
-        <Button
-            android:id="@+id/btnCartao"
-            android:text="Adicionar / editar cartão"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <!-- ENDEREÇO -->
         <TextView
-            android:text="Endereço"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_marginTop="20dp"
+            android:id="@+id/menuSenha"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <EditText
-            android:id="@+id/edtEndereco"
-            android:hint="Seu endereço"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <!-- SALVAR -->
-        <Button
-            android:id="@+id/btnSalvar"
-            android:text="Salvar alterações"
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <!-- SAIR -->
-        <Button
-            android:id="@+id/btnSair"
-            android:text="Sair da conta"
-            android:textColor="#D32F2F"
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="Trocar senha"
+            android:padding="10dp"/>
 
     </LinearLayout>
 
-</ScrollView>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:menu="@menu/menu_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>

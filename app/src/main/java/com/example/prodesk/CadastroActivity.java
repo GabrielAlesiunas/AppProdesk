@@ -35,36 +35,38 @@ public class CadastroActivity extends AppCompatActivity {
             String senhaStr = senha.getText().toString();
             String confirmarStr = confirmarSenha.getText().toString();
 
-            // VALIDAÇÕES
-            if (nomeStr.isEmpty() || emailStr.isEmpty() || telefoneStr.isEmpty() || senhaStr.isEmpty()) {
-                Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show();
+            if (nomeStr.isEmpty()) {
+                nome.setError("Digite seu nome");
                 return;
             }
 
             if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailStr).matches()) {
-                Toast.makeText(this, "Email inválido", Toast.LENGTH_SHORT).show();
+                email.setError("Email inválido");
+                return;
+            }
+
+            if (telefoneStr.length() < 10) {
+                telefone.setError("Telefone inválido");
                 return;
             }
 
             if (senhaStr.length() < 6) {
-                Toast.makeText(this, "Senha deve ter pelo menos 6 caracteres", Toast.LENGTH_SHORT).show();
+                senha.setError("Mínimo 6 caracteres");
                 return;
             }
 
             if (!senhaStr.equals(confirmarStr)) {
-                Toast.makeText(this, "Senhas não coincidem", Toast.LENGTH_SHORT).show();
+                confirmarSenha.setError("Senhas não coincidem");
                 return;
             }
 
             if (!checkTermos.isChecked()) {
-                Toast.makeText(this, "Aceite os termos de uso", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Aceite os termos", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // SUCESSO (FAKE POR ENQUANTO)
-            Toast.makeText(this, "Cadastro realizado com sucesso!", Toast.LENGTH_SHORT).show();
-
-            finish(); // volta para login
+            Toast.makeText(this, "Cadastro realizado!", Toast.LENGTH_SHORT).show();
+            finish();
         });
 
         // BOTÃO VOLTAR

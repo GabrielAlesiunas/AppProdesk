@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#2196F3"
+        android:title="Cartão"
+        android:titleTextColor="#FFFFFF"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- TÍTULO -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dados do Cartão"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- FORMULÁRIO -->
+        <EditText
+            android:id="@+id/edtNumeroCartao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Número do cartão"
+            android:inputType="number"/>
+
+        <EditText
+            android:id="@+id/edtNomeCartao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nome no cartão"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/edtValidade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Validade (MM/AA)"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/edtCVV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="CVV"
+            android:inputType="numberPassword"
+            android:layout_marginTop="12dp"/>
+
+        <Button
+            android:id="@+id/btnSalvarCartao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Salvar cartão"
+            android:layout_marginTop="20dp"/>
+
+        <!-- DIVISOR -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#DDDDDD"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- LISTA -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cartões cadastrados"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerCartoes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"/>
+
+    </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:menu="@menu/menu_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</ScrollView>

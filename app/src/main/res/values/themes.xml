@@ -9,6 +9,7 @@
         <!-- Cor secundária -->
         <item name="colorSecondary">#03DAC5</item>
         <item name="colorOnSecondary">#000000</item>
+
     </style>
 
 </resources>

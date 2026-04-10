@@ -17,7 +17,7 @@ public class DetalheActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhe);
 
-        // REFERÊNCIAS DOS COMPONENTES
+        // REFERÊNCIAS
         nome = findViewById(R.id.nomeEspaco);
         descricao = findViewById(R.id.descricao);
         preco = findViewById(R.id.preco);
@@ -26,18 +26,14 @@ public class DetalheActivity extends AppCompatActivity {
         opinioes = findViewById(R.id.opinioes);
         reservar = findViewById(R.id.btnReservar);
 
-        // RECEBE DADO DA TELA ANTERIOR
+        // DADO RECEBIDO DA TELA ANTERIOR
         String recebido = getIntent().getStringExtra("nome");
 
-        final String nomeEspaco;
+        String nomeEspaco = (recebido == null || recebido.isEmpty())
+                ? "Espaço não informado"
+                : recebido;
 
-        if (recebido == null) {
-            nomeEspaco = "Espaço não informado";
-        } else {
-            nomeEspaco = recebido;
-        }
-
-        // DADOS MOCKADOS (por enquanto)
+        // DADOS MOCKADOS (depois você substitui por banco/API)
         nome.setText(nomeEspaco);
         descricao.setText("Espaço moderno com ótima estrutura e ambiente confortável.");
         preco.setText("R$ 50,00 / hora");
@@ -47,8 +43,12 @@ public class DetalheActivity extends AppCompatActivity {
 
         // BOTÃO RESERVAR
         reservar.setOnClickListener(v -> {
-            Intent intent = new Intent(DetalheActivity.this, ReservasActivity.class);
-            intent.putExtra("reserva", nomeEspaco);
+            Intent intent = new Intent(DetalheActivity.this, ReservaActivity.class);
+
+            intent.putExtra("nome", nomeEspaco);
+            intent.putExtra("preco", preco.getText().toString());
+            intent.putExtra("descricao", descricao.getText().toString());
+
             startActivity(intent);
         });
     }

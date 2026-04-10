@@ -132,7 +132,6 @@
             android:layout_height="wrap_content"
             android:text="Reservar"
             android:layout_marginTop="20dp"/>
-
     </LinearLayout>
-
 </ScrollView>
+

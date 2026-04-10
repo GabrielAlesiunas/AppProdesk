@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EAEAEA">
+    android:background="#F5F5F5">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,85 +11,112 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- TÍTULO -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Criar Conta"
-            android:textSize="26sp"
-            android:textStyle="bold"
+            android:layout_marginBottom="24dp"
             android:gravity="center"
-            android:layout_marginBottom="20dp"/>
+            android:text="Criar Conta"
+            android:textColor="#040404"
+            android:textSize="26sp"
+            android:textStyle="bold" />
 
         <!-- NOME -->
-        <EditText
-            android:id="@+id/nome"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Nome completo"
-            android:layout_marginBottom="12dp"/>
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nome completo"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- EMAIL -->
-        <EditText
-            android:id="@+id/email"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Email"
-            android:inputType="textEmailAddress"
-            android:layout_marginBottom="12dp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:inputType="textEmailAddress"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- TELEFONE -->
-        <EditText
-            android:id="@+id/telefone"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Telefone"
-            android:inputType="phone"
-            android:layout_marginBottom="12dp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/telefone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Telefone"
+                android:inputType="phone"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- SENHA -->
-        <EditText
-            android:id="@+id/senha"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Senha"
-            android:inputType="textPassword"
-            android:layout_marginBottom="12dp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:endIconMode="password_toggle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/senha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Senha"
+                android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- CONFIRMAR SENHA -->
-        <EditText
-            android:id="@+id/confirmarSenha"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Confirmar senha"
-            android:inputType="textPassword"
-            android:layout_marginBottom="16dp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:endIconMode="password_toggle">
 
-        <!-- TERMOS -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/confirmarSenha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Confirmar senha"
+                android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
         <CheckBox
             android:id="@+id/checkTermos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="Aceito os termos de uso"
-            android:layout_marginBottom="16dp"/>
+            android:textColor="#000000" />
 
-        <!-- BOTÃO -->
         <Button
             android:id="@+id/btnCadastrar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="Cadastrar"
-            android:layout_marginBottom="10dp"/>
+            android:backgroundTint="#4AA3D8"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="16dp"/>
 
-        <!-- VOLTAR -->
         <TextView
             android:id="@+id/btnVoltar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Já tem conta? Voltar para login"
+            android:layout_marginTop="12dp"
             android:gravity="center"
-            android:textSize="12sp"/>
+            android:text="Já tem conta? Entrar"
+            android:textColor="#000000"
+            android:textStyle="bold" />
 
     </LinearLayout>
-
 </ScrollView>

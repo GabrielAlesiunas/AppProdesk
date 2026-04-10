@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:radius="12dp"
-    android:elevation="6dp">
+    app:cardCornerRadius="12dp"
+    app:cardElevation="6dp">
 
     <LinearLayout
         android:orientation="vertical"
-        android:padding="10dp"
+        android:padding="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -24,10 +25,9 @@
         <!-- NOME -->
         <TextView
             android:id="@+id/txtNome"
-            android:text="Nome do espaço"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#333"
+            android:textColor="#222"
             android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -35,31 +35,29 @@
         <!-- DESCRIÇÃO -->
         <TextView
             android:id="@+id/txtDescricao"
-            android:text="Descrição do espaço"
             android:textSize="14sp"
-            android:textColor="#777"
+            android:textColor="#666"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <!-- PREÇO -->
         <TextView
             android:id="@+id/txtPreco"
-            android:text="R$ 0,00 / hora"
             android:textStyle="bold"
             android:textColor="#000"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <!-- BOTÃO VER MAIS-->
+        <!-- BOTÃO -->
         <Button
             android:id="@+id/btnVerMais"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="Ver mais"
             android:layout_marginTop="10dp"
-            android:backgroundTint="#4A90E2"
-            android:textColor="#FFFFFF"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:backgroundTint="#4AA3D8"
+            android:textColor="#FFFFFF"/>
 
     </LinearLayout>
 

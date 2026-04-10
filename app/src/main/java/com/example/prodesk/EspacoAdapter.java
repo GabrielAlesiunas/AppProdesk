@@ -40,9 +40,9 @@ public class EspacoAdapter extends RecyclerView.Adapter<EspacoAdapter.ViewHolder
 
         // BOTÃO VER MAIS
         holder.btnVerMais.setOnClickListener(v -> {
-            Intent intent = new Intent(context, DetalheActivity.class);
+            Intent intent = new Intent(v.getContext(), DetalheActivity.class);
             intent.putExtra("nome", espaco.getNome());
-            context.startActivity(intent);
+            v.getContext().startActivity(intent);
         });
     }
 
