@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Botão padrão do app -->
+    <style name="AppButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/primary</item>
+        <item name="android:textColor">@color/textOnPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="shapeAppearanceOverlay">@style/RoundedButton</item>
+    </style>
+
+    <!-- Cantos arredondados -->
+    <style name="RoundedButton">
+        <item name="cornerSize">8dp</item>
+    </style>
+
+</resources>

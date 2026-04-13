@@ -27,7 +27,7 @@
             android:id="@+id/txtNome"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#222"
+            android:textColor="@color/textPrimary"
             android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -36,7 +36,7 @@
         <TextView
             android:id="@+id/txtDescricao"
             android:textSize="14sp"
-            android:textColor="#666"
+            android:textColor="@color/textSecondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -44,7 +44,7 @@
         <TextView
             android:id="@+id/txtPreco"
             android:textStyle="bold"
-            android:textColor="#000"
+            android:textColor="@color/textPrimary"
             android:layout_marginTop="4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -56,8 +56,8 @@
             android:layout_height="wrap_content"
             android:text="Ver mais"
             android:layout_marginTop="10dp"
-            android:backgroundTint="#4AA3D8"
-            android:textColor="#FFFFFF"/>
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/textOnPrimary"/>
 
     </LinearLayout>
 

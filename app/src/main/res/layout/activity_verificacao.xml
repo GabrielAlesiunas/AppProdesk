@@ -4,76 +4,100 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="20dp">
+    android:padding="20dp"
+    android:background="#F5F5F5">
 
-    <!-- Texto -->
+    <!-- Texto explicativo -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Você receberá o código de confirmação de quatro dígitos pelo email."
+        android:textColor="#000000"
+        android:textSize="16sp"
         android:gravity="center"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="24dp"/>
 
     <!-- Campos do código -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="24dp">
 
         <EditText
             android:id="@+id/code1"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:gravity="center"
+            android:textSize="20sp"
             android:inputType="number"
             android:maxLength="1"
-            android:gravity="center"/>
+            android:textColor="#000000"
+            android:background="#FFFFFF"
+            android:layout_marginEnd="8dp"/>
 
         <EditText
             android:id="@+id/code2"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:gravity="center"
+            android:textSize="20sp"
             android:inputType="number"
             android:maxLength="1"
-            android:gravity="center"/>
+            android:textColor="#000000"
+            android:background="#FFFFFF"
+            android:layout_marginEnd="8dp"/>
 
         <EditText
             android:id="@+id/code3"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:gravity="center"
+            android:textSize="20sp"
             android:inputType="number"
             android:maxLength="1"
-            android:gravity="center"/>
+            android:textColor="#000000"
+            android:background="#FFFFFF"
+            android:layout_marginEnd="8dp"/>
 
         <EditText
             android:id="@+id/code4"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:gravity="center"
+            android:textSize="20sp"
             android:inputType="number"
             android:maxLength="1"
-            android:gravity="center"/>
+            android:textColor="#000000"
+            android:background="#FFFFFF"/>
     </LinearLayout>
 
     <!-- Texto -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Não recebeu o código? reenviar pelo: Email ou SMS"
+        android:text="Não recebeu o código? Reenviar por:"
+        android:textColor="#000000"
         android:gravity="center"
         android:layout_marginBottom="20dp"/>
 
-    <!-- Botões -->
+    <!-- Botão Email -->
     <Button
         android:id="@+id/btnEmail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="Email"
-        android:layout_marginBottom="10dp"/>
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#2196F3"
+        android:layout_marginBottom="12dp"/>
 
+    <!-- Botão SMS -->
     <Button
         android:id="@+id/btnSms"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="SMS"/>
+        android:layout_height="50dp"
+        android:text="SMS"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#2196F3"/>
 
 </LinearLayout>

@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#F5F5F5"
+    android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -20,47 +20,62 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!-- TÍTULO -->
             <TextView
                 android:text="Cadastrar Espaço"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="#000"
+                android:textColor="@color/textPrimary"
                 android:layout_marginBottom="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
+            <!-- NOME -->
             <EditText
                 android:id="@+id/edtNomeEspaco"
                 android:hint="Nome do espaço"
+                android:textColor="@color/textPrimary"
+                android:textColorHint="@color/hintColor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <!-- DESCRIÇÃO -->
             <EditText
                 android:id="@+id/edtDescricao"
                 android:hint="Descrição"
+                android:textColor="@color/textPrimary"
+                android:textColorHint="@color/hintColor"
                 android:layout_marginTop="12dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <!-- PREÇO -->
             <EditText
                 android:id="@+id/edtPreco"
                 android:hint="Preço por hora (R$)"
                 android:inputType="numberDecimal"
+                android:textColor="@color/textPrimary"
+                android:textColorHint="@color/hintColor"
                 android:layout_marginTop="12dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <!-- ENDEREÇO -->
             <EditText
                 android:id="@+id/edtEndereco"
                 android:hint="Endereço"
+                android:textColor="@color/textPrimary"
+                android:textColorHint="@color/hintColor"
                 android:layout_marginTop="12dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <!-- COMODIDADES -->
             <TextView
                 android:text="Comodidades"
                 android:textStyle="bold"
                 android:textSize="16sp"
+                android:textColor="@color/textPrimary"
                 android:layout_marginTop="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -68,32 +83,37 @@
             <CheckBox
                 android:id="@+id/checkWifi"
                 android:text="Wi-Fi"
+                android:textColor="@color/textPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <CheckBox
                 android:id="@+id/checkAr"
                 android:text="Ar-condicionado"
+                android:textColor="@color/textPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <CheckBox
                 android:id="@+id/checkEstacionamento"
                 android:text="Estacionamento"
+                android:textColor="@color/textPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <CheckBox
                 android:id="@+id/checkCafe"
                 android:text="Café incluso"
+                android:textColor="@color/textPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <!-- ESPAÇO COMPARTILHADO -->
+            <!-- TIPO -->
             <TextView
                 android:text="Tipo de espaço"
                 android:textStyle="bold"
                 android:textSize="16sp"
+                android:textColor="@color/textPrimary"
                 android:layout_marginTop="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -107,39 +127,43 @@
                 <RadioButton
                     android:id="@+id/radioSim"
                     android:text="Compartilhado"
+                    android:textColor="@color/textPrimary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
                 <RadioButton
                     android:id="@+id/radioNao"
                     android:text="Privado"
+                    android:textColor="@color/textPrimary"
                     android:layout_marginStart="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-
             </RadioGroup>
 
-            <!-- FOTO -->
+            <!-- IMAGEM -->
             <ImageView
                 android:id="@+id/imgEspaco"
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
-                android:background="#DDD"
+                android:background="#DDDDDD"
                 android:scaleType="centerCrop"
                 android:layout_marginTop="16dp"/>
 
             <Button
                 android:id="@+id/btnSelecionarImagem"
                 android:text="Selecionar imagem"
+                android:textColor="@color/textOnPrimary"
+                android:backgroundTint="@color/primary"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <!-- BOTÃO SALVAR -->
             <Button
                 android:id="@+id/btnSalvarEspaco"
                 android:text="Salvar espaço"
-                android:backgroundTint="#2196F3"
-                android:textColor="#FFF"
+                android:textColor="@color/textOnPrimary"
+                android:backgroundTint="@color/primary"
                 android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -147,6 +171,7 @@
         </LinearLayout>
     </ScrollView>
 
+    <!-- MENU INFERIOR -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="0dp"
@@ -156,5 +181,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

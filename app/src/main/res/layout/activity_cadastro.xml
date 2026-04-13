@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="@color/background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,13 +11,14 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <!-- TÍTULO -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:gravity="center"
             android:text="Criar Conta"
-            android:textColor="#040404"
+            android:textColor="@color/textPrimary"
             android:textSize="26sp"
             android:textStyle="bold" />
 
@@ -30,7 +31,9 @@
                 android:id="@+id/nome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nome completo"/>
+                android:hint="Nome completo"
+                android:textColor="@color/textPrimary"
+                android:textColorHint="@color/hintColor"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- EMAIL -->
@@ -44,7 +47,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
-                android:inputType="textEmailAddress"/>
+                android:inputType="textEmailAddress"
+                android:textColor="@color/textPrimary"
+                android:textColorHint="@color/hintColor"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- TELEFONE -->
@@ -58,7 +63,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Telefone"
-                android:inputType="phone"/>
+                android:inputType="phone"
+                android:textColor="@color/textPrimary"
+                android:textColorHint="@color/hintColor"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- SENHA -->
@@ -73,7 +80,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Senha"
-                android:inputType="textPassword"/>
+                android:inputType="textPassword"
+                android:textColor="@color/textPrimary"
+                android:textColorHint="@color/hintColor"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- CONFIRMAR SENHA -->
@@ -88,26 +97,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Confirmar senha"
-                android:inputType="textPassword"/>
+                android:inputType="textPassword"
+                android:textColor="@color/textPrimary"
+                android:textColorHint="@color/hintColor"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- TERMOS -->
         <CheckBox
             android:id="@+id/checkTermos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Aceito os termos de uso"
-            android:textColor="#000000" />
+            android:textColor="@color/textPrimary" />
 
+        <!-- BOTÃO CADASTRAR -->
         <Button
             android:id="@+id/btnCadastrar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="Cadastrar"
-            android:backgroundTint="#4AA3D8"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/textOnPrimary"
+            android:backgroundTint="@color/primary"
             android:layout_marginTop="16dp"/>
 
+        <!-- LOGIN -->
         <TextView
             android:id="@+id/btnVoltar"
             android:layout_width="match_parent"
@@ -115,7 +129,7 @@
             android:layout_marginTop="12dp"
             android:gravity="center"
             android:text="Já tem conta? Entrar"
-            android:textColor="#000000"
+            android:textColor="@color/textPrimary"
             android:textStyle="bold" />
 
     </LinearLayout>
