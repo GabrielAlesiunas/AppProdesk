@@ -1,9 +1,7 @@
 package com.example.prodesk;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,11 +18,13 @@ public class CartaoAdapter extends RecyclerView.Adapter<CartaoAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView txtNumero, txtNome;
+        Button btnExcluir;
 
         public ViewHolder(View itemView) {
             super(itemView);
             txtNumero = itemView.findViewById(R.id.txtNumero);
             txtNome = itemView.findViewById(R.id.txtNome);
+            btnExcluir = itemView.findViewById(R.id.btnExcluir);
         }
     }
 
@@ -38,14 +38,20 @@ public class CartaoAdapter extends RecyclerView.Adapter<CartaoAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartaoAdapter.ViewHolder holder, int position) {
+
         Cartao cartao = lista.get(position);
 
-        // MOSTRAR SÓ OS 4 ÚLTIMOS
-        String numero = cartao.getNumero();
-        String finalCartao = "**** **** **** " + numero.substring(numero.length() - 4);
+        String finalCartao = "**** **** **** " + cartao.getNumero().substring(cartao.getNumero().length() - 4);
 
         holder.txtNumero.setText(finalCartao);
         holder.txtNome.setText(cartao.getNome());
+
+        // 🔥 AÇÃO DE EXCLUIR
+        holder.btnExcluir.setOnClickListener(v -> {
+            lista.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, lista.size());
+        });
     }
 
     @Override

@@ -50,16 +50,17 @@ public class MainActivity extends AppCompatActivity {
             int id = item.getItemId();
 
             if (id == R.id.nav_home) {
+                startActivity(new Intent(this, MainActivity.class));
+                return true;
+            }
+
+            if (id == R.id.nav_reservas) {
+                startActivity(new Intent(this, HistoricoReservasActivity.class));
                 return true;
             }
 
             if (id == R.id.nav_CadEspacos) {
                 startActivity(new Intent(this, CadastroEspacoActivity.class));
-                return true;
-            }
-
-            if (id == R.id.nav_reservas) {
-                startActivity(new Intent(this, ReservasActivity.class));
                 return true;
             }
 

@@ -117,7 +117,32 @@ public class ReservaActivity extends AppCompatActivity {
 
         // menu
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setOnItemSelectedListener(item -> true);
+        bottomNav.setOnItemSelectedListener(item -> {
+
+            int id = item.getItemId();
+
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(this, MainActivity.class));
+                return true;
+            }
+
+            if (id == R.id.nav_reservas) {
+                startActivity(new Intent(this, HistoricoReservasActivity.class));
+                return true;
+            }
+
+            if (id == R.id.nav_CadEspacos) {
+                startActivity(new Intent(this, CadastroEspacoActivity.class));
+                return true;
+            }
+
+            if (id == R.id.nav_perfil) {
+                startActivity(new Intent(this, PerfilActivity.class));
+                return true;
+            }
+
+            return false;
+        });
     }
 
     private void calcular() {

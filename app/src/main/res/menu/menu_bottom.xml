@@ -15,7 +15,7 @@
     <item
         android:id="@+id/nav_CadEspacos"
         android:icon="@drawable/ic_user"
-        android:title="Cadastro Espaços"/>
+        android:title="Cadastrar Espaços"/>
 
     <item
         android:id="@+id/nav_perfil"

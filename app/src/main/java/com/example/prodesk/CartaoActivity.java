@@ -24,23 +24,27 @@ public class CartaoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // MENU INFERIOR
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_cartao);
 
+        // BOTTOM NAV
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnItemSelectedListener(item -> {
 
             int id = item.getItemId();
 
             if (id == R.id.nav_home) {
-                return true;
-            }
-
-            if (id == R.id.nav_CadEspacos) {
+                startActivity(new Intent(this, MainActivity.class));
                 return true;
             }
 
             if (id == R.id.nav_reservas) {
-                startActivity(new Intent(this, ReservasActivity.class));
+                startActivity(new Intent(this, HistoricoReservasActivity.class));
+                return true;
+            }
+
+            if (id == R.id.nav_CadEspacos) {
+                startActivity(new Intent(this, CadastroEspacoActivity.class));
                 return true;
             }
 
@@ -51,9 +55,6 @@ public class CartaoActivity extends AppCompatActivity {
 
             return false;
         });
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cartao);
 
         // INPUTS
         edtNumeroCartao = findViewById(R.id.edtNumeroCartao);
@@ -70,7 +71,6 @@ public class CartaoActivity extends AppCompatActivity {
         recyclerCartoes.setLayoutManager(new LinearLayoutManager(this));
         recyclerCartoes.setAdapter(adapter);
 
-        // BOTÃO SALVAR
         btnSalvarCartao.setOnClickListener(v -> salvarCartao());
     }
 
@@ -78,21 +78,14 @@ public class CartaoActivity extends AppCompatActivity {
         String numero = edtNumeroCartao.getText().toString().trim();
         String nome = edtNomeCartao.getText().toString().trim();
 
-        if (numero.isEmpty() || nome.isEmpty()) {
-            toast("Preencha os dados do cartão");
+        if (numero.length() < 8 || nome.isEmpty()) {
+            toast("Dados inválidos");
             return;
         }
 
-        if (numero.length() < 8) {
-            toast("Número de cartão inválido");
-            return;
-        }
-
-        // ADICIONA NA LISTA
         listaCartoes.add(new Cartao(numero, nome));
         adapter.notifyDataSetChanged();
 
-        // LIMPAR CAMPOS
         edtNumeroCartao.setText("");
         edtNomeCartao.setText("");
         edtValidade.setText("");

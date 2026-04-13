@@ -17,13 +17,19 @@ public class ReservaAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() { return lista.size(); }
+    public int getCount() {
+        return lista.size();
+    }
 
     @Override
-    public Object getItem(int i) { return lista.get(i); }
+    public Object getItem(int i) {
+        return lista.get(i);
+    }
 
     @Override
-    public long getItemId(int i) { return i; }
+    public long getItemId(int i) {
+        return i;
+    }
 
     @Override
     public View getView(int i, View view, ViewGroup parent) {
@@ -36,7 +42,9 @@ public class ReservaAdapter extends BaseAdapter {
         TextView horario = view.findViewById(R.id.horario);
         TextView pagamento = view.findViewById(R.id.pagamento);
         TextView status = view.findViewById(R.id.status);
+        Button btnAvaliar = view.findViewById(R.id.btnAvaliar);
 
+        // CRIA O OBJETO PRIMEIRO
         ReservaModel r = lista.get(i);
 
         img.setImageResource(r.imagem);
@@ -46,6 +54,47 @@ public class ReservaAdapter extends BaseAdapter {
         pagamento.setText("Pagamento: " + r.pagamento);
         status.setText(r.status);
 
+        // AGORA SIM PODE USAR r
+        btnAvaliar.setOnClickListener(v -> {
+            showDialogAvaliacao(r.nome);
+        });
+
         return view;
+    }
+
+    private void showDialogAvaliacao(String nomeEspaco) {
+
+        android.app.AlertDialog.Builder builder =
+                new android.app.AlertDialog.Builder(context);
+
+        builder.setTitle("Avaliar " + nomeEspaco);
+
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(40, 20, 40, 10);
+
+        EditText inputComentario = new EditText(context);
+        inputComentario.setHint("Escreva sua opinião...");
+        layout.addView(inputComentario);
+
+        RatingBar ratingBar = new RatingBar(context);
+        ratingBar.setNumStars(5);
+        ratingBar.setStepSize(1);
+        layout.addView(ratingBar);
+
+        builder.setView(layout);
+
+        builder.setPositiveButton("Enviar", (dialog, which) -> {
+            float estrelas = ratingBar.getRating();
+            String comentario = inputComentario.getText().toString();
+
+            Toast.makeText(context,
+                    "Nota: " + estrelas + " estrelas\nComentário: " + comentario,
+                    Toast.LENGTH_LONG).show();
+        });
+
+        builder.setNegativeButton("Cancelar", null);
+
+        builder.show();
     }
 }

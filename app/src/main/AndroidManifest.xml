@@ -40,15 +40,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ReservasActivity"
-            android:exported="false" />
-        <activity
             android:name=".DetalheActivity"
             android:exported="false" />
         <activity android:name=".HistoricoReservasActivity" />
         <activity android:name=".CartaoActivity"/>
         <activity android:name=".SenhaActivity"/>
         <activity android:name=".RecuperarSenhaActivity"/>
+        <activity android:name=".CadastroEspacoActivity" />
     </application>
 
 </manifest>

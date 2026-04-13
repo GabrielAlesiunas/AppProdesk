@@ -15,21 +15,24 @@ public class HistoricoReservasActivity extends AppCompatActivity {
 
         // MENU INFERIOR
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setSelectedItemId(R.id.nav_reservas);
 
         bottomNav.setOnItemSelectedListener(item -> {
 
             int id = item.getItemId();
 
             if (id == R.id.nav_home) {
-                return true;
-            }
-
-            if (id == R.id.nav_CadEspacos) {
+                startActivity(new Intent(this, MainActivity.class));
                 return true;
             }
 
             if (id == R.id.nav_reservas) {
-                startActivity(new Intent(this, ReservasActivity.class));
+                startActivity(new Intent(this, HistoricoReservasActivity.class));
+                return true;
+            }
+
+            if (id == R.id.nav_CadEspacos) {
+                startActivity(new Intent(this, CadastroEspacoActivity.class));
                 return true;
             }
 
