@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "308531487691",
+    "project_id": "prodesk-28eb1",
+    "storage_bucket": "prodesk-28eb1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308531487691:android:34f7a653eae3c14340cc4e",
+        "android_client_info": {
+          "package_name": "com.example.prodesk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKwAwabGSdmhJGh0pUprU6SHRrksKSZUQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
