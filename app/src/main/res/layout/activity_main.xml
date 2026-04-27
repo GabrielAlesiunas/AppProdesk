@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -5,8 +6,9 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <!-- CONTEÚDO ROLÁVEL -->
-    <ScrollView
+    <!-- CONTEÚDO -->
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -14,41 +16,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:padding="12dp"
+        <!-- MAPA -->
+        <org.osmdroid.views.MapView
+            android:id="@+id/map"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="200dp" />
 
-            <!-- TÍTULO -->
-            <TextView
-                android:text="Espaços disponíveis"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="@color/textPrimary"
-                android:layout_marginBottom="4dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+        <!-- TÍTULO -->
+        <TextView
+            android:text="Espaços disponíveis"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/textPrimary"
+            android:layout_margin="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-            <!-- SUBTÍTULO -->
-            <TextView
-                android:text="Escolha o melhor lugar para você"
-                android:textSize="14sp"
-                android:textColor="@color/textSecondary"
-                android:layout_marginBottom="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+        <!-- SUBTÍTULO -->
+        <TextView
+            android:text="Escolha o melhor lugar para você"
+            android:textSize="14sp"
+            android:textColor="@color/textSecondary"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-            <!-- LISTA -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerEspacos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"/>
+        <!-- LISTA -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerEspacos"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
-        </LinearLayout>
-
-    </ScrollView>
+    </LinearLayout>
 
     <!-- MENU INFERIOR -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
