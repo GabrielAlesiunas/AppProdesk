@@ -6,11 +6,15 @@ import android.widget.*;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class LoginActivity extends AppCompatActivity {
 
     EditText email, senha;
     Button btnLogin;
     TextView btnCadastro, btnEsqueciSenha;
+
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +27,14 @@ public class LoginActivity extends AppCompatActivity {
         btnCadastro = findViewById(R.id.btnCadastro);
         btnEsqueciSenha = findViewById(R.id.btnEsqueciSenha);
 
-        // LOGIN
+        mAuth = FirebaseAuth.getInstance();
+
+        // 🔥 LOGIN AUTOMÁTICO
+        if (mAuth.getCurrentUser() != null) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
+
         btnLogin.setOnClickListener(v -> {
 
             String emailTxt = email.getText().toString().trim();
@@ -39,25 +50,33 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            if (senhaTxt.length() < 4) {
-                senha.setError("Senha muito curta");
+            if (senhaTxt.length() < 6) {
+                senha.setError("Mínimo 6 caracteres");
                 return;
             }
 
-            Toast.makeText(this, "Login realizado", Toast.LENGTH_SHORT).show();
+            // 🔥 LOGIN COM FIREBASE
+            mAuth.signInWithEmailAndPassword(emailTxt, senhaTxt)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
 
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
+                            Toast.makeText(this, "Login realizado", Toast.LENGTH_SHORT).show();
+
+                            startActivity(new Intent(this, MainActivity.class));
+                            finish();
+
+                        } else {
+                            Toast.makeText(this, "Erro: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
         });
 
-        // ESQUECI SENHA
-        btnEsqueciSenha.setOnClickListener(v -> {
-            startActivity(new Intent(this, RecuperarSenhaActivity.class));
-        });
-
-        // CADASTRO
         btnCadastro.setOnClickListener(v -> {
             startActivity(new Intent(this, CadastroActivity.class));
+        });
+
+        btnEsqueciSenha.setOnClickListener(v -> {
+            startActivity(new Intent(this, RecuperarSenhaActivity.class));
         });
     }
 }
