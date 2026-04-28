@@ -4,43 +4,76 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="6dp">
+    app:cardCornerRadius="16dp"
+    app:cardElevation="6dp"
+    app:cardBackgroundColor="@color/primary">
 
     <LinearLayout
-        android:padding="16dp"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="140dp"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!-- NÚMERO DO CARTÃO -->
+        <!-- CHIP / LABEL -->
+        <TextView
+            android:text="Cartão de crédito"
+            android:textSize="12sp"
+            android:textColor="#CCFFFFFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- NÚMERO -->
         <TextView
             android:id="@+id/txtNumero"
             android:text="**** **** **** 1234"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:textSize="18sp"
-            android:textColor="#000000"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <!-- NOME NO CARTÃO -->
+        <!-- NOME -->
         <TextView
             android:id="@+id/txtNome"
-            android:text="Nome no cartão"
-            android:textColor="#000000"
-            android:layout_marginTop="6dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <!-- BOTÃO EXCLUIR -->
-        <Button
-            android:id="@+id/btnExcluir"
-            android:text="Excluir"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#E53935"
+            android:text="NOME NO CARTÃO"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            android:textColor="#E0E0E0"
             android:layout_marginTop="12dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+        <!-- LINHA FINAL -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:id="@+id/txtValidade"
+                android:text="VALIDADE 12/28"
+                android:textSize="12sp"
+                android:textColor="#DDFFFFFF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <!-- MENU AÇÕES (opcional depois swipe) -->
+            <TextView
+                android:id="@+id/btnMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="&#8942;"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:padding="6dp"/>
+        </LinearLayout>
 
     </LinearLayout>
 

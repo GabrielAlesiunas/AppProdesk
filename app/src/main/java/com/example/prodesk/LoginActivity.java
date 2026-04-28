@@ -1,6 +1,7 @@
 package com.example.prodesk;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.*;
 
@@ -16,6 +17,9 @@ public class LoginActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
 
+    // ⏱️ 30 minutos
+    private static final long TEMPO_LIMITE = 30 * 60 * 1000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,10 +33,20 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        // 🔥 LOGIN AUTOMÁTICO
+        // 🔥 VERIFICA SESSÃO AO ABRIR
         if (mAuth.getCurrentUser() != null) {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
+
+            if (sessaoExpirada()) {
+
+                mAuth.signOut();
+
+                Toast.makeText(this,
+                        "Sessão expirada, faça login novamente",
+                        Toast.LENGTH_LONG).show();
+
+            } else {
+                irParaHome();
+            }
         }
 
         btnLogin.setOnClickListener(v -> {
@@ -55,18 +69,21 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            // 🔥 LOGIN COM FIREBASE
             mAuth.signInWithEmailAndPassword(emailTxt, senhaTxt)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
 
-                            Toast.makeText(this, "Login realizado", Toast.LENGTH_SHORT).show();
+                            // 🔥 SALVA HORÁRIO DO LOGIN
+                            salvarHorarioLogin();
 
-                            startActivity(new Intent(this, MainActivity.class));
-                            finish();
+                            Toast.makeText(this, "Login realizado!", Toast.LENGTH_SHORT).show();
+
+                            irParaHome();
 
                         } else {
-                            Toast.makeText(this, "Erro: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(this,
+                                    "Erro: " + task.getException().getMessage(),
+                                    Toast.LENGTH_LONG).show();
                         }
                     });
         });
@@ -78,5 +95,30 @@ public class LoginActivity extends AppCompatActivity {
         btnEsqueciSenha.setOnClickListener(v -> {
             startActivity(new Intent(this, RecuperarSenhaActivity.class));
         });
+    }
+
+    // 🔐 SALVA HORÁRIO
+    private void salvarHorarioLogin() {
+        SharedPreferences prefs = getSharedPreferences("app", MODE_PRIVATE);
+        prefs.edit()
+                .putLong("login_time", System.currentTimeMillis())
+                .apply();
+    }
+
+    // ⏱️ VERIFICA SE EXPIROU
+    private boolean sessaoExpirada() {
+
+        SharedPreferences prefs = getSharedPreferences("app", MODE_PRIVATE);
+
+        long loginTime = prefs.getLong("login_time", 0);
+        long agora = System.currentTimeMillis();
+
+        return (agora - loginTime) > TEMPO_LIMITE;
+    }
+
+    // 🚀 IR PRA HOME
+    private void irParaHome() {
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 }

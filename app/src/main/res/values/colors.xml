@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Cores principais -->
+    <!-- 🔵 CORES PRINCIPAIS -->
     <color name="primary">#2196F3</color>
     <color name="primaryDark">#1976D2</color>
     <color name="accent">#03A9F4</color>
 
-    <!-- Textos -->
+    <!-- 🧾 TEXTOS -->
     <color name="textPrimary">#000000</color>
-    <color name="textSecondary">#555555</color>
+    <color name="textSecondary">#666666</color>
     <color name="hintColor">#777777</color>
     <color name="textOnPrimary">#FFFFFF</color>
 
-    <!-- Fundo -->
+    <!-- 🎨 FUNDO -->
     <color name="background">#F5F5F5</color>
+    <color name="cardBackground">#FFFFFF</color>
 
-    <!-- Status -->
+    <!-- STATUS -->
     <color name="success">#2E7D32</color>
     <color name="danger">#D32F2F</color>
 

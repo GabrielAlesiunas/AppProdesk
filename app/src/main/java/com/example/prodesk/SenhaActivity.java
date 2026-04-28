@@ -28,6 +28,7 @@ public class SenhaActivity extends AppCompatActivity {
 
         // Bottom Navigation
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setSelectedItemId(R.id.nav_perfil);
         bottomNav.setOnItemSelectedListener(item -> {
 
             int id = item.getItemId();

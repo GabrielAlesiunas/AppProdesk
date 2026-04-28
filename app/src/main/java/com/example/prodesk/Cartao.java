@@ -2,19 +2,17 @@ package com.example.prodesk;
 
 public class Cartao {
 
-    String numero;
-    String nome;
+    public String id;
+    public String numero;
+    public String nome;
+    public String validade;
 
-    public Cartao(String numero, String nome) {
+    public Cartao() {}
+
+    public Cartao(String id, String numero, String nome, String validade) {
+        this.id = id;
         this.numero = numero;
         this.nome = nome;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public String getNome() {
-        return nome;
+        this.validade = validade;
     }
 }
