@@ -1,29 +1,60 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="16dp"
     app:cardCornerRadius="20dp"
-    app:cardElevation="8dp">
+    app:cardElevation="6dp"
+    app:cardUseCompatPadding="true"
+    app:cardBackgroundColor="@android:color/transparent">
 
+    <!-- 👇 FUNDO VAI AQUI -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp"
+        android:paddingBottom="24dp"
         android:background="@drawable/bg_cartao_gradiente">
 
-        <!-- BANDEIRA / TIPO -->
-        <TextView
-            android:text="CRÉDITO"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:textColor="#AAFFFFFF"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <!-- TOPO -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <!-- ESPAÇO FLEX -->
+            <TextView
+                android:text="CRÉDITO"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="#AAFFFFFF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/btnMenu"
+                android:text="&#8942;"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:padding="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <!-- CHIP -->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_chip"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -33,9 +64,9 @@
         <TextView
             android:id="@+id/txtNumero"
             android:text="**** **** **** 1234"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:letterSpacing="0.1"
+            android:letterSpacing="0.08"
             android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -45,24 +76,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="12dp">
 
-            <!-- NOME -->
             <TextView
                 android:id="@+id/txtNome"
                 android:text="SEU NOME"
                 android:textAllCaps="true"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textColor="#E0E0E0"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"/>
 
-            <!-- VALIDADE -->
             <TextView
                 android:id="@+id/txtValidade"
                 android:text="12/28"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textColor="#FFFFFF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -70,4 +99,4 @@
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
