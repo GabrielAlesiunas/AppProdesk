@@ -2,25 +2,27 @@ package com.example.prodesk;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.*;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.io.*;
 
 public class PerfilActivity extends AppCompatActivity {
 
     ImageView imgPerfil, btnLogout;
-    Button btnTrocarFoto, btnSalvar;
+    Button btnSalvar;
+    TextView btnTrocarFoto, txtEmail;
     EditText edtNome;
-    TextView txtEmail;
 
     LinearLayout itemCartoes, itemSeguranca;
 
@@ -28,7 +30,6 @@ public class PerfilActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     FirebaseFirestore db;
-    FirebaseStorage storage;
 
     Uri imagemSelecionada;
 
@@ -39,9 +40,8 @@ public class PerfilActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        storage = FirebaseStorage.getInstance();
 
-        // 🔥 PROTEÇÃO
+        // 🔒 PROTEÇÃO
         if (mAuth.getCurrentUser() == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
@@ -70,15 +70,7 @@ public class PerfilActivity extends AppCompatActivity {
 
         btnTrocarFoto.setOnClickListener(v -> abrirGaleria());
 
-        btnSalvar.setOnClickListener(v -> {
-            salvarNome();
-
-            if (imagemSelecionada != null) {
-                uploadImagem();
-            } else {
-                Toast.makeText(this, "Dados atualizados!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        btnSalvar.setOnClickListener(v -> salvarTudo());
 
         btnLogout.setOnClickListener(v -> {
             mAuth.signOut();
@@ -121,10 +113,85 @@ public class PerfilActivity extends AppCompatActivity {
         });
     }
 
-    // 🔥 CARREGAR DADOS
-    private void carregarDadosUsuario() {
+    // 🔥 SALVAR (Firebase + Local)
+    private void salvarTudo() {
 
-        if (mAuth.getCurrentUser() == null) return;
+        String nome = edtNome.getText().toString().trim();
+
+        if (nome.isEmpty()) {
+            edtNome.setError("Digite um nome");
+            return;
+        }
+
+        String userId = mAuth.getCurrentUser().getUid();
+
+        // 🔹 Salva nome no Firebase
+        db.collection("usuarios")
+                .document(userId)
+                .update("nome", nome)
+                .addOnSuccessListener(aVoid -> {
+
+                    // 🔹 Se tiver imagem → salva local
+                    if (imagemSelecionada != null) {
+
+                        String caminho = salvarImagemLocal(imagemSelecionada);
+
+                        if (caminho != null) {
+                            salvarImagemLocalPrefs(caminho);
+
+                            Glide.with(this)
+                                    .load(caminho)
+                                    .into(imgPerfil);
+                        }
+
+                        imagemSelecionada = null;
+                    }
+
+                    Toast.makeText(this, "Perfil atualizado!", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Erro ao salvar nome", Toast.LENGTH_LONG).show()
+                );
+    }
+
+    // 🔥 SALVAR IMAGEM LOCAL
+    private String salvarImagemLocal(Uri uri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+
+            String nomeArquivo = "perfil_" + System.currentTimeMillis() + ".jpg";
+            File file = new File(getFilesDir(), nomeArquivo);
+
+            OutputStream outputStream = new FileOutputStream(file);
+
+            byte[] buffer = new byte[1024];
+            int length;
+
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            outputStream.close();
+            inputStream.close();
+
+            return file.getAbsolutePath();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Erro ao salvar imagem", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
+    // 🔥 SALVAR CAMINHO DA IMAGEM
+    private void salvarImagemLocalPrefs(String caminho) {
+
+        SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
+        prefs.edit().putString("foto", caminho).apply();
+    }
+
+    // 🔥 CARREGAR DADOS DO FIREBASE
+    private void carregarDadosUsuario() {
 
         String userId = mAuth.getCurrentUser().getUid();
 
@@ -137,19 +204,15 @@ public class PerfilActivity extends AppCompatActivity {
 
                         String nome = doc.getString("nome");
                         String email = doc.getString("email");
-                        String fotoUrl = doc.getString("foto");
 
                         if (nome != null)
                             edtNome.setText(nome);
 
                         if (email != null)
-                            txtEmail.setText("Email: " + email);
+                            txtEmail.setText(email);
 
-                        if (fotoUrl != null && !fotoUrl.isEmpty()) {
-                            Glide.with(this)
-                                    .load(fotoUrl)
-                                    .into(imgPerfil);
-                        }
+                        // 🔥 CARREGA IMAGEM LOCAL
+                        carregarImagemLocal();
                     }
                 })
                 .addOnFailureListener(e ->
@@ -157,30 +220,20 @@ public class PerfilActivity extends AppCompatActivity {
                 );
     }
 
-    // 🔥 SALVAR NOME
-    private void salvarNome() {
+    // 🔥 CARREGAR IMAGEM LOCAL
+    private void carregarImagemLocal() {
 
-        String nome = edtNome.getText().toString().trim();
+        SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
+        String foto = prefs.getString("foto", null);
 
-        if (nome.isEmpty()) {
-            edtNome.setError("Digite um nome");
-            return;
+        if (foto != null) {
+            Glide.with(this)
+                    .load(foto)
+                    .into(imgPerfil);
         }
-
-        String userId = mAuth.getCurrentUser().getUid();
-
-        db.collection("usuarios")
-                .document(userId)
-                .update("nome", nome)
-                .addOnSuccessListener(aVoid ->
-                        Toast.makeText(this, "Nome atualizado!", Toast.LENGTH_SHORT).show()
-                )
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Erro ao salvar nome", Toast.LENGTH_LONG).show()
-                );
     }
 
-    // 📸 GALERIA
+    // 📸 ABRIR GALERIA
     private void abrirGaleria() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
@@ -189,39 +242,15 @@ public class PerfilActivity extends AppCompatActivity {
 
     // 📸 RESULTADO
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+
             imagemSelecionada = data.getData();
+
+            // preview imediato
             imgPerfil.setImageURI(imagemSelecionada);
         }
-    }
-
-    // 🔥 UPLOAD IMAGEM
-    private void uploadImagem() {
-
-        String userId = mAuth.getCurrentUser().getUid();
-
-        StorageReference ref = storage.getReference()
-                .child("fotos")
-                .child(userId + ".jpg");
-
-        ref.putFile(imagemSelecionada)
-                .addOnSuccessListener(taskSnapshot ->
-                        ref.getDownloadUrl().addOnSuccessListener(uri -> {
-
-                            String url = uri.toString();
-
-                            db.collection("usuarios")
-                                    .document(userId)
-                                    .update("foto", url);
-
-                            Toast.makeText(this, "Foto atualizada!", Toast.LENGTH_SHORT).show();
-                        })
-                )
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Erro ao enviar imagem", Toast.LENGTH_LONG).show()
-                );
     }
 }
