@@ -2,14 +2,15 @@ package com.example.prodesk;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.PasswordTransformationMethod;
-import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.*;
 import android.view.View;
 import android.widget.*;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.*;
+import androidx.appcompat.widget.SwitchCompat;
 
 public class SenhaActivity extends AppCompatActivity {
 
@@ -17,18 +18,64 @@ public class SenhaActivity extends AppCompatActivity {
     CheckBox checkMostrarSenha;
     Button btnSalvarSenha;
 
-    Switch switch2FA;
+    SwitchCompat switch2FA;
     EditText edtCodigo2FA;
     Button btnValidar2FA;
+
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_senha);
 
-        // Bottom Navigation
+        mAuth = FirebaseAuth.getInstance();
+
+        edtSenhaAtual = findViewById(R.id.edtSenhaAtual);
+        edtNovaSenha = findViewById(R.id.edtNovaSenha);
+        edtConfirmarSenha = findViewById(R.id.edtConfirmarSenha);
+        checkMostrarSenha = findViewById(R.id.checkMostrarSenha);
+        btnSalvarSenha = findViewById(R.id.btnSalvarSenha);
+
+        switch2FA = findViewById(R.id.switch2FA); // agora bate com o XML
+        edtCodigo2FA = findViewById(R.id.edtCodigo2FA);
+        btnValidar2FA = findViewById(R.id.btnValidar2FA);
+
+        // Mostrar senha
+        checkMostrarSenha.setOnCheckedChangeListener((b, isChecked) -> {
+            if (isChecked) {
+                setVisible();
+            } else {
+                setHidden();
+            }
+        });
+
+        // Salvar senha (🔥 REAL COM FIREBASE)
+        btnSalvarSenha.setOnClickListener(v -> alterarSenhaFirebase());
+
+        // 2FA
+        switch2FA.setOnCheckedChangeListener((b, isChecked) -> {
+            edtCodigo2FA.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            btnValidar2FA.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+
+            if (isChecked) {
+                toast("Código enviado (simulado)");
+            }
+        });
+
+        btnValidar2FA.setOnClickListener(v -> {
+            if (edtCodigo2FA.getText().toString().length() < 4) {
+                edtCodigo2FA.setError("Código inválido");
+            } else {
+                toast("2FA validado!");
+            }
+        });
+
+        // MENU
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+
         bottomNav.setSelectedItemId(R.id.nav_perfil);
+
         bottomNav.setOnItemSelectedListener(item -> {
 
             int id = item.getItemId();
@@ -49,68 +96,83 @@ public class SenhaActivity extends AppCompatActivity {
             }
 
             if (id == R.id.nav_perfil) {
-                startActivity(new Intent(this, PerfilActivity.class));
                 return true;
             }
 
             return false;
         });
+    }
 
-        edtSenhaAtual = findViewById(R.id.edtSenhaAtual);
-        edtNovaSenha = findViewById(R.id.edtNovaSenha);
-        edtConfirmarSenha = findViewById(R.id.edtConfirmarSenha);
-        checkMostrarSenha = findViewById(R.id.checkMostrarSenha);
-        btnSalvarSenha = findViewById(R.id.btnSalvarSenha);
+    private void alterarSenhaFirebase() {
 
-        switch2FA = findViewById(R.id.switch2FA);
-        edtCodigo2FA = findViewById(R.id.edtCodigo2FA);
-        btnValidar2FA = findViewById(R.id.btnValidar2FA);
+        FirebaseUser user = mAuth.getCurrentUser();
 
-        // Mostrar / esconder senha
-        checkMostrarSenha.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                edtSenhaAtual.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                edtNovaSenha.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                edtConfirmarSenha.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-            } else {
-                edtSenhaAtual.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                edtNovaSenha.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                edtConfirmarSenha.setTransformationMethod(PasswordTransformationMethod.getInstance());
-            }
-        });
+        if (user == null) {
+            toast("Usuário não autenticado");
+            return;
+        }
 
-        // Salvar senha
-        btnSalvarSenha.setOnClickListener(v -> {
-            String atual = edtSenhaAtual.getText().toString();
-            String nova = edtNovaSenha.getText().toString();
-            String confirmar = edtConfirmarSenha.getText().toString();
+        String senhaAtual = edtSenhaAtual.getText().toString();
+        String novaSenha = edtNovaSenha.getText().toString();
+        String confirmar = edtConfirmarSenha.getText().toString();
 
-            if (atual.isEmpty() || nova.isEmpty() || confirmar.isEmpty()) {
-                toast("Preencha todos os campos");
-            } else if (!nova.equals(confirmar)) {
-                toast("As senhas não coincidem");
-            } else if (nova.length() < 6) {
-                toast("A senha deve ter pelo menos 6 caracteres");
-            } else {
-                toast("Senha alterada com sucesso!");
-            }
-        });
+        // Validação
+        if (senhaAtual.isEmpty()) {
+            edtSenhaAtual.setError("Digite a senha atual");
+            return;
+        }
 
-        // 2FA
-        switch2FA.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            edtCodigo2FA.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-            btnValidar2FA.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-        });
+        if (novaSenha.length() < 6) {
+            edtNovaSenha.setError("Mínimo 6 caracteres");
+            return;
+        }
 
-        btnValidar2FA.setOnClickListener(v -> {
-            String codigo = edtCodigo2FA.getText().toString();
+        if (!novaSenha.equals(confirmar)) {
+            edtConfirmarSenha.setError("Senhas não coincidem");
+            return;
+        }
 
-            if (codigo.length() < 4) {
-                toast("Código inválido");
-            } else {
-                toast("Código verificado!");
-            }
-        });
+        // 🔥 REAUTENTICAÇÃO (OBRIGATÓRIO)
+        AuthCredential credential = EmailAuthProvider.getCredential(
+                user.getEmail(),
+                senhaAtual
+        );
+
+        user.reauthenticate(credential)
+                .addOnSuccessListener(aVoid -> {
+
+                    // 🔥 ALTERAR SENHA
+                    user.updatePassword(novaSenha)
+                            .addOnSuccessListener(aVoid1 -> {
+                                toast("Senha atualizada com sucesso!");
+                                limparCampos();
+                            })
+                            .addOnFailureListener(e ->
+                                    toast("Erro ao atualizar: " + e.getMessage())
+                            );
+
+                })
+                .addOnFailureListener(e ->
+                        toast("Senha atual incorreta")
+                );
+    }
+
+    private void setVisible() {
+        edtSenhaAtual.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        edtNovaSenha.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        edtConfirmarSenha.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+    }
+
+    private void setHidden() {
+        edtSenhaAtual.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        edtNovaSenha.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        edtConfirmarSenha.setTransformationMethod(PasswordTransformationMethod.getInstance());
+    }
+
+    private void limparCampos() {
+        edtSenhaAtual.setText("");
+        edtNovaSenha.setText("");
+        edtConfirmarSenha.setText("");
     }
 
     private void toast(String msg) {
