@@ -1,162 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/background">
+    android:background="#FFFFFF">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:padding="16dp"
+    <!-- CONTEÚDO PRINCIPAL -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <!-- IMAGEM PRINCIPAL -->
-        <ImageView
-            android:id="@+id/imgPrincipal"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:background="#DDDDDD"/>
-
-        <!-- NOME -->
-        <TextView
-            android:id="@+id/nomeEspaco"
-            android:text="Nome do espaço"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="@color/primary"
-            android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <!-- AVALIAÇÃO -->
-        <TextView
-            android:id="@+id/avaliacao"
-            android:text="⭐ 0.0 / 5"
-            android:textColor="@color/textPrimary"
-            android:layout_marginTop="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <!-- DESCRIÇÃO -->
-        <TextView
-            android:id="@+id/descricao"
-            android:text="Descrição do espaço"
-            android:textColor="@color/textPrimary"
-            android:layout_marginTop="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <!-- PREÇO -->
-        <TextView
-            android:id="@+id/preco"
-            android:text="R$ 0,00 / hora"
-            android:textStyle="bold"
-            android:textColor="@color/primary"
-            android:layout_marginTop="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <!-- COMODIDADES -->
-        <TextView
-            android:text="Comodidades"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/textPrimary"
-            android:layout_marginTop="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
-            android:id="@+id/comodidadesLayout"
-            android:orientation="horizontal"
-            android:layout_marginTop="5dp"
-            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!-- IMAGEM -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp">
+
+                <ImageView
+                    android:id="@+id/imgPrincipal"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:scaleType="centerCrop"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- NOME -->
             <TextView
-                android:text="Wi-Fi"
-                android:background="#DDDDDD"
-                android:padding="6dp"
-                android:layout_marginEnd="5dp"
-                android:textColor="@color/textPrimary"
+                android:id="@+id/nomeEspaco"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="Nome do espaço"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:textColor="#1E1E1E"/>
+
+            <!-- AVALIAÇÃO -->
+            <TextView
+                android:id="@+id/avaliacao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⭐ 4.8 / 5"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp"
+                android:textColor="#FF9800"/>
+
+            <!-- PREÇO -->
+            <TextView
+                android:id="@+id/preco"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="R$ 50 /H"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="8dp"
+                android:textColor="#2E7D32"/>
+
+            <!-- DESCRIÇÃO -->
+            <TextView
+                android:id="@+id/descricao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descrição do espaço"
+                android:layout_marginTop="8dp"
+                android:textColor="#555555"/>
+
+            <!-- COMODIDADES -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comodidades"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                android:textColor="#333333"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="#F5F5F5"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wi-Fi"
+                    android:padding="6dp"
+                    android:background="#EEEEEE"
+                    android:layout_marginEnd="6dp"
+                    android:textColor="#333333"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Café"
+                    android:padding="6dp"
+                    android:background="#EEEEEE"
+                    android:textColor="#333333"/>
+            </LinearLayout>
+
+            <!-- DONO -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dono"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:textColor="#333333"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="6dp"
+                android:background="#F5F5F5"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/dono"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="admin"
+                    android:layout_marginStart="10dp"
+                    android:textSize="16sp"
+                    android:textColor="#1E1E1E"/>
+            </LinearLayout>
+
+            <!-- OPINIÕES -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Opiniões"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"
+                android:textColor="#333333"/>
 
             <TextView
-                android:text="Café"
-                android:background="#DDDDDD"
-                android:padding="6dp"
-                android:layout_marginEnd="5dp"
-                android:textColor="@color/textPrimary"
+                android:id="@+id/opinioes"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="Nenhuma opinião ainda"
+                android:layout_marginTop="6dp"
+                android:textColor="#666666"/>
 
-            <TextView
-                android:text="Ar condicionado"
-                android:background="#DDDDDD"
-                android:padding="6dp"
-                android:textColor="@color/textPrimary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            <!-- BOTÃO -->
+            <Button
+                android:id="@+id/btnReservar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Reservar"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/primary"
+                android:textColor="#FFFFFF"/>
         </LinearLayout>
-
-        <!-- DONO -->
-        <TextView
-            android:text="Dono"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/textPrimary"
-            android:layout_marginTop="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/dono"
-            android:text="admin"
-            android:textColor="@color/textPrimary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <!-- OPINIÕES -->
-        <TextView
-            android:text="Opiniões dos usuários"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/textPrimary"
-            android:layout_marginTop="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/opinioes"
-            android:text="Nenhuma opinião registrada."
-            android:textColor="@color/textPrimary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <!-- BOTÃO -->
-        <Button
-            android:id="@+id/btnReservar"
-            android:text="Reservar"
-            android:backgroundTint="@color/primary"
-            android:textColor="@color/textOnPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"/>
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_navigation"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/primary"
-            app:itemIconTint="@color/nav_item_color"
-            app:itemTextColor="@color/nav_item_color"
-            app:menu="@menu/menu_bottom"
-            app:labelVisibilityMode="labeled"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>

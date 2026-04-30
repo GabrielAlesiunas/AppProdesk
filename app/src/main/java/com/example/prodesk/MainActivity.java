@@ -8,20 +8,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.osmdroid.config.Configuration;
-import org.osmdroid.views.MapView;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recycler;
-    List<Espaco> lista;
+    ArrayList<Espaco> lista = new ArrayList<>();
     MapView map;
+
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,50 +34,19 @@ public class MainActivity extends AppCompatActivity {
                 getSharedPreferences("osmdroid", MODE_PRIVATE)
         );
 
-        Configuration.getInstance().setUserAgentValue(getPackageName());
-
         setContentView(R.layout.activity_main);
 
-        // MAPA
-        map = findViewById(R.id.map);
-        map.setMultiTouchControls(true);
+        db = FirebaseFirestore.getInstance();
 
-        GeoPoint centro = new GeoPoint(-23.55, -46.63); // SP
-        map.getController().setZoom(13.0);
-        map.getController().setCenter(centro);
-
-        // RECYCLER
         recycler = findViewById(R.id.recyclerEspacos);
-
-        lista = new ArrayList<>();
-
-        // DADOS MOCKADOS
-        lista.add(new Espaco("Coworking Central", "Espaço moderno com salas privativas", "R$ 25/hora"));
-        lista.add(new Espaco("Hub Criativo", "Ambiente colaborativo para startups", "R$ 22/hora"));
-        lista.add(new Espaco("Espaço Verde", "Área ao ar livre sustentável", "R$ 28/hora"));
-
-        EspacoAdapter adapter = new EspacoAdapter(lista, this);
+        map = findViewById(R.id.map);
 
         recycler.setLayoutManager(new LinearLayoutManager(this));
-        recycler.setAdapter(adapter);
 
-        // MARCADORES NO MAPA
-        for (Espaco e : lista) {
+        map.setMultiTouchControls(true);
 
-            // posição aleatória próxima (até você usar lat/lng real)
-            GeoPoint ponto = new GeoPoint(
-                    -23.55 + Math.random() / 100,
-                    -46.63 + Math.random() / 100
-            );
+        carregarEspacos();
 
-            Marker marker = new Marker(map);
-            marker.setPosition(ponto);
-            marker.setTitle(e.getNome());
-
-            map.getOverlays().add(marker);
-        }
-
-        // MENU INFERIOR
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
 
         bottomNav.setSelectedItemId(R.id.nav_home);
@@ -103,5 +74,48 @@ public class MainActivity extends AppCompatActivity {
 
             return false;
         });
+    }
+
+    private void carregarEspacos() {
+
+        db.collection("espacos")
+                .addSnapshotListener((value, error) -> {
+
+                    if (error != null || value == null) return;
+
+                    lista.clear();
+                    map.getOverlays().clear();
+
+                    GeoPoint centro = new GeoPoint(-23.55, -46.63);
+
+                    for (var doc : value.getDocuments()) {
+
+                        Espaco e = doc.toObject(Espaco.class);
+                        if (e == null) continue;
+
+                        e.setId(doc.getId()); // 🔥 ESSENCIAL (ERA ISSO QUE FALTAVA)
+
+                        lista.add(e);
+
+                        if (e.getLatitude() != 0 && e.getLongitude() != 0) {
+
+                            GeoPoint point = new GeoPoint(e.getLatitude(), e.getLongitude());
+
+                            Marker marker = new Marker(map);
+                            marker.setPosition(point);
+                            marker.setTitle(e.getNome());
+                            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+
+                            map.getOverlays().add(marker);
+                        }
+                    }
+
+                    recycler.setAdapter(new EspacoAdapter(lista, this));
+
+                    map.getController().setCenter(centro);
+                    map.getController().setZoom(13.5);
+
+                    map.invalidate();
+                });
     }
 }

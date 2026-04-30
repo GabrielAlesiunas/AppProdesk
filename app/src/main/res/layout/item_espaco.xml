@@ -6,8 +6,9 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="12dp"
     android:layout_marginTop="10dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="6dp"
+    app:cardUseCompatPadding="true"
     app:cardBackgroundColor="@android:color/white">
 
     <LinearLayout
@@ -20,9 +21,10 @@
         <ImageView
             android:id="@+id/imgEspaco"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="180dp"
             android:scaleType="centerCrop"
-            android:background="#DDDDDD"
+            android:background="#EEEEEE"
+            android:contentDescription="Imagem do espaço"
             android:clipToOutline="true"/>
 
         <!-- NOME -->
@@ -31,7 +33,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/textPrimary"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -40,29 +42,33 @@
             android:id="@+id/txtDescricao"
             android:textSize="14sp"
             android:textColor="@color/textSecondary"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="4dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"/>
 
         <!-- PREÇO -->
         <TextView
             android:id="@+id/txtPreco"
-            android:textStyle="bold"
             android:textSize="15sp"
-            android:textColor="@color/textPrimary"
-            android:layout_marginTop="4dp"
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:layout_marginTop="6dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <!-- BOTÃO -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnVerMais"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:text="Ver detalhes"
-            android:layout_marginTop="10dp"
+            android:textAllCaps="false"
+            android:layout_marginTop="12dp"
             android:backgroundTint="@color/primary"
-            android:textColor="@color/textOnPrimary"/>
+            android:textColor="@color/textOnPrimary"
+            app:cornerRadius="10dp"/>
 
     </LinearLayout>
 

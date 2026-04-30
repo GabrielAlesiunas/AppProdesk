@@ -2,8 +2,13 @@ package com.example.prodesk;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.widget.*;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,9 +16,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class CadastroEspacoActivity extends AppCompatActivity {
@@ -25,12 +32,10 @@ public class CadastroEspacoActivity extends AppCompatActivity {
     CheckBox checkWifi, checkAr, checkEstacionamento, checkCafe;
     RadioButton radioSim;
 
+    Uri imagemSelecionada;
     FirebaseFirestore db;
 
-    // 🖼️ MULTI IMAGENS
-    ArrayList<Uri> imagensSelecionadas = new ArrayList<>();
-
-    private static final int PICK_IMAGES = 100;
+    private static final int PICK_IMAGE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,74 +60,41 @@ public class CadastroEspacoActivity extends AppCompatActivity {
         btnImagem = findViewById(R.id.btnSelecionarImagem);
         btnSalvar = findViewById(R.id.btnSalvarEspaco);
 
-        // 📷 abrir galeria (MULTI SELEÇÃO)
         btnImagem.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setType("image/*");
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            startActivityForResult(Intent.createChooser(intent, "Selecionar imagens"), PICK_IMAGES);
+            startActivityForResult(intent, PICK_IMAGE);
         });
 
-        // 💾 salvar
         btnSalvar.setOnClickListener(v -> salvarEspaco());
 
-        // MENU
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-
         bottomNav.setSelectedItemId(R.id.nav_CadEspacos);
-
-        bottomNav.setOnItemSelectedListener(item -> {
-
-            int id = item.getItemId();
-
-            if (id == R.id.nav_home) {
-                startActivity(new Intent(this, MainActivity.class));
-                return true;
-            }
-
-            if (id == R.id.nav_reservas) {
-                startActivity(new Intent(this, HistoricoReservasActivity.class));
-                return true;
-            }
-
-            if (id == R.id.nav_perfil) {
-                return true;
-            }
-
-            return false;
-        });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGES && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+            imagemSelecionada = data.getData();
+            imgEspaco.setImageURI(imagemSelecionada);
+        }
+    }
 
-            imagensSelecionadas.clear();
+    private String converterImagemBase64(Uri uri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
-            // múltiplas imagens
-            if (data.getClipData() != null) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
 
-                int count = data.getClipData().getItemCount();
+            byte[] bytes = baos.toByteArray();
+            return Base64.encodeToString(bytes, Base64.DEFAULT);
 
-                for (int i = 0; i < count; i++) {
-                    Uri uri = data.getClipData().getItemAt(i).getUri();
-                    imagensSelecionadas.add(uri);
-                }
-
-            } else if (data.getData() != null) {
-                imagensSelecionadas.add(data.getData());
-            }
-
-            // mostra primeira imagem só no preview
-            if (!imagensSelecionadas.isEmpty()) {
-                imgEspaco.setImageURI(imagensSelecionadas.get(0));
-            }
-
-            Toast.makeText(this,
-                    imagensSelecionadas.size() + " imagem(ns) selecionada(s)",
-                    Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            return null;
         }
     }
 
@@ -138,38 +110,54 @@ public class CadastroEspacoActivity extends AppCompatActivity {
             return;
         }
 
-        Map<String, Object> dados = new HashMap<>();
+        try {
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            List<Address> lista = geocoder.getFromLocationName(endereco, 1);
 
-        dados.put("nome", nome);
-        dados.put("descricao", descricao);
-        dados.put("preco", preco);
-        dados.put("endereco", endereco);
+            if (lista == null || lista.isEmpty()) {
+                Toast.makeText(this, "Endereço não encontrado", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-        // 🖼️ SALVAR LISTA DE IMAGENS (SEM STORAGE)
-        List<String> imagens = new ArrayList<>();
-        for (Uri uri : imagensSelecionadas) {
-            imagens.add(uri.toString());
+            Address a = lista.get(0);
+
+            double lat = a.getLatitude();
+            double lng = a.getLongitude();
+
+            String imagemBase64 = imagemSelecionada != null
+                    ? converterImagemBase64(imagemSelecionada)
+                    : "";
+
+            Map<String, Object> dados = new HashMap<>();
+            dados.put("nome", nome);
+            dados.put("descricao", descricao);
+            dados.put("preco", preco);
+            dados.put("endereco", endereco);
+            dados.put("latitude", lat);
+            dados.put("longitude", lng);
+            dados.put("imagem", imagemBase64);
+
+            dados.put("comodidades",
+                    (checkWifi.isChecked() ? "Wi-Fi " : "") +
+                            (checkAr.isChecked() ? "Ar " : "") +
+                            (checkEstacionamento.isChecked() ? "Estacionamento " : "") +
+                            (checkCafe.isChecked() ? "Café " : "")
+            );
+
+            dados.put("tipo", radioSim.isChecked() ? "Compartilhado" : "Privado");
+
+            db.collection("espacos")
+                    .add(dados)
+                    .addOnSuccessListener(doc -> {
+                        Toast.makeText(this, "Salvo com sucesso!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(this, "Erro ao salvar", Toast.LENGTH_SHORT).show()
+                    );
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Erro ao processar endereço", Toast.LENGTH_SHORT).show();
         }
-        dados.put("imagens", imagens);
-
-        // comodidades
-        dados.put("comodidades",
-                (checkWifi.isChecked() ? "Wi-Fi " : "") +
-                        (checkAr.isChecked() ? "Ar " : "") +
-                        (checkEstacionamento.isChecked() ? "Estacionamento " : "") +
-                        (checkCafe.isChecked() ? "Café " : "")
-        );
-
-        dados.put("tipo", radioSim.isChecked() ? "Compartilhado" : "Privado");
-
-        db.collection("espacos")
-                .add(dados)
-                .addOnSuccessListener(doc -> {
-                    Toast.makeText(this, "Espaço salvo!", Toast.LENGTH_SHORT).show();
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Erro ao salvar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
     }
 }
