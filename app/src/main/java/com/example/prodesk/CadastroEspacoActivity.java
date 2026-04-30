@@ -9,50 +9,66 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CadastroEspacoActivity extends AppCompatActivity {
 
     EditText edtNome, edtDescricao, edtPreco, edtEndereco;
+    Button btnSalvar, btnImagem;
     ImageView imgEspaco;
-    Button btnImagem, btnSalvar;
-    CheckBox checkWifi, checkAr, checkEstacionamento, checkCafe;
-    RadioGroup radioCompartilhado;
-    RadioButton radioSim, radioNao;
 
-    Uri imagemSelecionada;
-    private static final int PICK_IMAGE = 1;
+    CheckBox checkWifi, checkAr, checkEstacionamento, checkCafe;
+    RadioButton radioSim;
+
+    FirebaseFirestore db;
+
+    // 🖼️ MULTI IMAGENS
+    ArrayList<Uri> imagensSelecionadas = new ArrayList<>();
+
+    private static final int PICK_IMAGES = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro_espaco);
 
-        // COMPONENTES
+        db = FirebaseFirestore.getInstance();
+
         edtNome = findViewById(R.id.edtNomeEspaco);
         edtDescricao = findViewById(R.id.edtDescricao);
         edtPreco = findViewById(R.id.edtPreco);
         edtEndereco = findViewById(R.id.edtEndereco);
+
         checkWifi = findViewById(R.id.checkWifi);
         checkAr = findViewById(R.id.checkAr);
         checkEstacionamento = findViewById(R.id.checkEstacionamento);
         checkCafe = findViewById(R.id.checkCafe);
 
-        radioCompartilhado = findViewById(R.id.radioCompartilhado);
         radioSim = findViewById(R.id.radioSim);
-        radioNao = findViewById(R.id.radioNao);
 
         imgEspaco = findViewById(R.id.imgEspaco);
         btnImagem = findViewById(R.id.btnSelecionarImagem);
         btnSalvar = findViewById(R.id.btnSalvarEspaco);
 
-        // IMAGEM
-        btnImagem.setOnClickListener(v -> abrirGaleria());
+        // 📷 abrir galeria (MULTI SELEÇÃO)
+        btnImagem.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            startActivityForResult(Intent.createChooser(intent, "Selecionar imagens"), PICK_IMAGES);
+        });
 
-        // SALVAR
+        // 💾 salvar
         btnSalvar.setOnClickListener(v -> salvarEspaco());
 
         // MENU
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+
         bottomNav.setSelectedItemId(R.id.nav_CadEspacos);
 
         bottomNav.setOnItemSelectedListener(item -> {
@@ -70,7 +86,6 @@ public class CadastroEspacoActivity extends AppCompatActivity {
             }
 
             if (id == R.id.nav_perfil) {
-                startActivity(new Intent(this, PerfilActivity.class));
                 return true;
             }
 
@@ -78,19 +93,36 @@ public class CadastroEspacoActivity extends AppCompatActivity {
         });
     }
 
-    private void abrirGaleria() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
-            imagemSelecionada = data.getData();
-            imgEspaco.setImageURI(imagemSelecionada);
+        if (requestCode == PICK_IMAGES && resultCode == Activity.RESULT_OK && data != null) {
+
+            imagensSelecionadas.clear();
+
+            // múltiplas imagens
+            if (data.getClipData() != null) {
+
+                int count = data.getClipData().getItemCount();
+
+                for (int i = 0; i < count; i++) {
+                    Uri uri = data.getClipData().getItemAt(i).getUri();
+                    imagensSelecionadas.add(uri);
+                }
+
+            } else if (data.getData() != null) {
+                imagensSelecionadas.add(data.getData());
+            }
+
+            // mostra primeira imagem só no preview
+            if (!imagensSelecionadas.isEmpty()) {
+                imgEspaco.setImageURI(imagensSelecionadas.get(0));
+            }
+
+            Toast.makeText(this,
+                    imagensSelecionadas.size() + " imagem(ns) selecionada(s)",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -106,24 +138,38 @@ public class CadastroEspacoActivity extends AppCompatActivity {
             return;
         }
 
-        // Comodidades
-        StringBuilder comodidades = new StringBuilder();
+        Map<String, Object> dados = new HashMap<>();
 
-        if (checkWifi.isChecked()) comodidades.append("Wi-Fi ");
-        if (checkAr.isChecked()) comodidades.append("Ar-condicionado ");
-        if (checkEstacionamento.isChecked()) comodidades.append("Estacionamento ");
-        if (checkCafe.isChecked()) comodidades.append("Café ");
+        dados.put("nome", nome);
+        dados.put("descricao", descricao);
+        dados.put("preco", preco);
+        dados.put("endereco", endereco);
 
-        // Tipo de espaço
-        String tipoEspaco = radioSim.isChecked() ? "Compartilhado" : "Privado";
+        // 🖼️ SALVAR LISTA DE IMAGENS (SEM STORAGE)
+        List<String> imagens = new ArrayList<>();
+        for (Uri uri : imagensSelecionadas) {
+            imagens.add(uri.toString());
+        }
+        dados.put("imagens", imagens);
 
-        // Debug / confirmação
-        Toast.makeText(this,
-                "Espaço cadastrado!\n" +
-                        "Comodidades: " + comodidades.toString() + "\n" +
-                        "Tipo: " + tipoEspaco,
-                Toast.LENGTH_LONG).show();
+        // comodidades
+        dados.put("comodidades",
+                (checkWifi.isChecked() ? "Wi-Fi " : "") +
+                        (checkAr.isChecked() ? "Ar " : "") +
+                        (checkEstacionamento.isChecked() ? "Estacionamento " : "") +
+                        (checkCafe.isChecked() ? "Café " : "")
+        );
 
-        finish();
+        dados.put("tipo", radioSim.isChecked() ? "Compartilhado" : "Privado");
+
+        db.collection("espacos")
+                .add(dados)
+                .addOnSuccessListener(doc -> {
+                    Toast.makeText(this, "Espaço salvo!", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Erro ao salvar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 }

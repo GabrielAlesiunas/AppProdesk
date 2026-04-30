@@ -2,13 +2,15 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background">
 
+    <!-- CONTEÚDO -->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,151 +24,178 @@
 
             <!-- TÍTULO -->
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Cadastrar Espaço"
-                android:textSize="24sp"
+                android:textSize="26sp"
                 android:textStyle="bold"
                 android:textColor="@color/textPrimary"
-                android:layout_marginBottom="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_marginBottom="16dp"/>
 
-            <!-- NOME -->
-            <EditText
-                android:id="@+id/edtNomeEspaco"
-                android:hint="Nome do espaço"
-                android:textColor="@color/textPrimary"
-                android:textColorHint="@color/hintColor"
+            <!-- CARD PRINCIPAL -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@color/cardBackground">
 
-            <!-- DESCRIÇÃO -->
-            <EditText
-                android:id="@+id/edtDescricao"
-                android:hint="Descrição"
-                android:textColor="@color/textPrimary"
-                android:textColorHint="@color/hintColor"
-                android:layout_marginTop="12dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            <!-- PREÇO -->
-            <EditText
-                android:id="@+id/edtPreco"
-                android:hint="Preço por hora (R$)"
-                android:inputType="numberDecimal"
-                android:textColor="@color/textPrimary"
-                android:textColorHint="@color/hintColor"
-                android:layout_marginTop="12dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                    <!-- NOME -->
+                    <EditText
+                        android:id="@+id/edtNomeEspaco"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Nome do espaço"
+                        android:textColor="@color/textPrimary"
+                        android:textColorHint="@color/hintColor"
+                        android:backgroundTint="@color/primary"/>
 
-            <!-- ENDEREÇO -->
-            <EditText
-                android:id="@+id/edtEndereco"
-                android:hint="Endereço"
-                android:textColor="@color/textPrimary"
-                android:textColorHint="@color/hintColor"
-                android:layout_marginTop="12dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                    <!-- DESCRIÇÃO -->
+                    <EditText
+                        android:id="@+id/edtDescricao"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Descrição"
+                        android:layout_marginTop="12dp"
+                        android:textColor="@color/textPrimary"
+                        android:textColorHint="@color/hintColor"
+                        android:backgroundTint="@color/primary"/>
 
-            <!-- COMODIDADES -->
-            <TextView
-                android:text="Comodidades"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:textColor="@color/textPrimary"
-                android:layout_marginTop="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                    <!-- PREÇO -->
+                    <EditText
+                        android:id="@+id/edtPreco"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Preço por hora (R$)"
+                        android:inputType="numberDecimal"
+                        android:layout_marginTop="12dp"
+                        android:textColor="@color/textPrimary"
+                        android:textColorHint="@color/hintColor"
+                        android:backgroundTint="@color/primary"/>
 
-            <CheckBox
-                android:id="@+id/checkWifi"
-                android:text="Wi-Fi"
-                android:textColor="@color/textPrimary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                    <!-- ENDEREÇO -->
+                    <EditText
+                        android:id="@+id/edtEndereco"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Endereço completo"
+                        android:layout_marginTop="12dp"
+                        android:textColor="@color/textPrimary"
+                        android:textColorHint="@color/hintColor"
+                        android:backgroundTint="@color/primary"/>
 
-            <CheckBox
-                android:id="@+id/checkAr"
-                android:text="Ar-condicionado"
-                android:textColor="@color/textPrimary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <CheckBox
-                android:id="@+id/checkEstacionamento"
-                android:text="Estacionamento"
-                android:textColor="@color/textPrimary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <CheckBox
-                android:id="@+id/checkCafe"
-                android:text="Café incluso"
-                android:textColor="@color/textPrimary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <!-- TIPO -->
-            <TextView
-                android:text="Tipo de espaço"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:textColor="@color/textPrimary"
-                android:layout_marginTop="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <RadioGroup
-                android:id="@+id/radioCompartilhado"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <RadioButton
-                    android:id="@+id/radioSim"
-                    android:text="Compartilhado"
-                    android:textColor="@color/textPrimary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <RadioButton
-                    android:id="@+id/radioNao"
-                    android:text="Privado"
-                    android:textColor="@color/textPrimary"
-                    android:layout_marginStart="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RadioGroup>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- IMAGEM -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Imagem do espaço"
+                android:textStyle="bold"
+                android:textColor="@color/textPrimary"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"/>
+
             <ImageView
                 android:id="@+id/imgEspaco"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="180dp"
                 android:background="#DDDDDD"
-                android:scaleType="centerCrop"
-                android:layout_marginTop="16dp"/>
+                android:scaleType="centerCrop"/>
 
             <Button
                 android:id="@+id/btnSelecionarImagem"
-                android:text="Selecionar imagem"
-                android:textColor="@color/textOnPrimary"
-                android:backgroundTint="@color/primary"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="Selecionar imagem"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/primary"
+                android:textColor="@color/textOnPrimary"/>
+
+            <!-- COMODIDADES -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comodidades"
+                android:textStyle="bold"
+                android:textColor="@color/textPrimary"
+                android:layout_marginTop="20dp"/>
+
+            <CheckBox
+                android:id="@+id/checkWifi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wi-Fi"
+                android:textColor="@color/textSecondary"/>
+
+            <CheckBox
+                android:id="@+id/checkAr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ar-condicionado"
+                android:textColor="@color/textSecondary"/>
+
+            <CheckBox
+                android:id="@+id/checkEstacionamento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Estacionamento"
+                android:textColor="@color/textSecondary"/>
+
+            <CheckBox
+                android:id="@+id/checkCafe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Café incluso"
+                android:textColor="@color/textSecondary"/>
+
+            <!-- TIPO -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipo de espaço"
+                android:textStyle="bold"
+                android:textColor="@color/textPrimary"
+                android:layout_marginTop="20dp"/>
+
+            <RadioGroup
+                android:id="@+id/radioCompartilhado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioSim"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Compartilhado"
+                    android:textColor="@color/textSecondary"/>
+
+                <RadioButton
+                    android:id="@+id/radioNao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Privado"
+                    android:textColor="@color/textSecondary"
+                    android:layout_marginStart="20dp"/>
+            </RadioGroup>
 
             <!-- BOTÃO SALVAR -->
             <Button
                 android:id="@+id/btnSalvarEspaco"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Salvar espaço"
                 android:textColor="@color/textOnPrimary"
                 android:backgroundTint="@color/primary"
-                android:layout_marginTop="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_marginTop="24dp"/>
 
         </LinearLayout>
     </ScrollView>
@@ -184,4 +213,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
