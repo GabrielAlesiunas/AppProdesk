@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class DetalheActivity extends AppCompatActivity {
@@ -53,44 +54,65 @@ public class DetalheActivity extends AppCompatActivity {
 
         db.collection("espacos").document(id)
                 .get()
-                .addOnSuccessListener(doc -> {
-
-                    Espaco e = doc.toObject(Espaco.class);
-                    if (e == null) return;
-
-                    nome.setText(e.getNome());
-                    descricao.setText(e.getDescricao());
-
-                    // 💰 formato correto
-                    preco.setText("R$ " + e.getPreco() + " /H");
-
-                    avaliacao.setText("⭐ 4.8 / 5");
-
-                    dono.setText(e.getDonoNome() != null ? e.getDonoNome() : "admin");
-
-                    opinioes.setText("Sem avaliações ainda");
-
-                    if (e.getImagem() != null && !e.getImagem().isEmpty()) {
-                        byte[] bytes = Base64.decode(e.getImagem(), Base64.DEFAULT);
-                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        img.setImageBitmap(bmp);
-                    }
-
-                    // 🔥 BOTÃO RESERVAR
-                    reservar.setOnClickListener(v -> {
-
-                        Intent intent = new Intent(DetalheActivity.this, ReservaActivity.class);
-
-                        intent.putExtra("nome", e.getNome());
-                        intent.putExtra("preco", e.getPreco());
-                        intent.putExtra("descricao", e.getDescricao());
-
-                        startActivity(intent);
-                    });
-
-                })
+                .addOnSuccessListener(this::processarDocumento)
                 .addOnFailureListener(e ->
                         Toast.makeText(this, "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show()
                 );
+    }
+
+    private void processarDocumento(DocumentSnapshot doc) {
+
+        if (!doc.exists()) return;
+
+        String nomeStr = doc.getString("nome");
+        String descricaoStr = doc.getString("descricao");
+        String precoStr = doc.getString("preco");
+        String imagemBase64 = doc.getString("imagem");
+
+        nome.setText(nomeStr);
+        descricao.setText(descricaoStr);
+        preco.setText("R$ " + precoStr + " /H");
+        avaliacao.setText("⭐ 4.8 / 5");
+        dono.setText("admin");
+        opinioes.setText("Sem avaliações ainda");
+
+        // 🔥 IMAGEM BASE64 CORRIGIDA
+        if (imagemBase64 != null && !imagemBase64.isEmpty()) {
+            try {
+
+                // 🔥 remove quebras de linha e espaços (MUITO IMPORTANTE)
+                String cleanBase64 = imagemBase64
+                        .replace("\n", "")
+                        .replace("\r", "")
+                        .replace(" ", "");
+
+                byte[] bytes = Base64.decode(cleanBase64, Base64.DEFAULT);
+
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                if (bmp != null) {
+                    img.setImageBitmap(bmp);
+                } else {
+                    img.setImageResource(android.R.color.darker_gray);
+                }
+
+            } catch (Exception e) {
+                img.setImageResource(android.R.color.darker_gray);
+            }
+        } else {
+            img.setImageResource(android.R.color.darker_gray);
+        }
+
+        reservar.setOnClickListener(v -> {
+
+            Intent intent = new Intent(DetalheActivity.this, ReservaActivity.class);
+
+            intent.putExtra("id", doc.getId()); // 🔥 IMPORTANTE
+            intent.putExtra("nome", nomeStr);
+            intent.putExtra("preco", precoStr);
+            intent.putExtra("descricao", descricaoStr);
+
+            startActivity(intent);
+        });
     }
 }

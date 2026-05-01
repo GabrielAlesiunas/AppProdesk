@@ -87,14 +87,20 @@ public class CadastroEspacoActivity extends AppCompatActivity {
             InputStream inputStream = getContentResolver().openInputStream(uri);
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
+            // 🔥 REDUZ tamanho da imagem (IMPORTANTE)
+            Bitmap resized = Bitmap.createScaledBitmap(bitmap, 800, 800, true);
+
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
+
+            // qualidade menor = menos chance de quebrar Firestore
+            resized.compress(Bitmap.CompressFormat.JPEG, 50, baos);
 
             byte[] bytes = baos.toByteArray();
-            return Base64.encodeToString(bytes, Base64.DEFAULT);
+
+            return Base64.encodeToString(bytes, Base64.NO_WRAP);
 
         } catch (Exception e) {
-            return null;
+            return "";
         }
     }
 
