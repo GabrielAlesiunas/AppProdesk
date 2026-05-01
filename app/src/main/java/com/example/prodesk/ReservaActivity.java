@@ -4,33 +4,38 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.*;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class ReservaActivity extends AppCompatActivity {
 
     TextView txtNome, txtPreco, txtDescricao;
-    TextView txtDataInicio, txtDataFim, txtHoraInicio, txtHoraFim, txtResumo;
-
-    Button btnDataInicio, btnDataFim, btnHoraInicio, btnHoraFim, btnConfirmar;
+    TextView txtDataInicio, txtDataFim, txtHoraInicio, txtResumo;
+    TextView btnConfirmar;
 
     Calendar dataInicioCal = Calendar.getInstance();
     Calendar dataFimCal = Calendar.getInstance();
 
-    double precoHora = 50.0; // default
+    double precoHora = 50.0;
+
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reserva);
 
-        // refs
+        db = FirebaseFirestore.getInstance();
+
         txtNome = findViewById(R.id.txtNome);
         txtPreco = findViewById(R.id.txtPreco);
         txtDescricao = findViewById(R.id.txtDescricao);
@@ -38,16 +43,10 @@ public class ReservaActivity extends AppCompatActivity {
         txtDataInicio = findViewById(R.id.txtDataInicio);
         txtDataFim = findViewById(R.id.txtDataFim);
         txtHoraInicio = findViewById(R.id.txtHoraInicio);
-        txtHoraFim = findViewById(R.id.txtHoraFim);
         txtResumo = findViewById(R.id.txtResumo);
 
-        btnDataInicio = findViewById(R.id.btnDataInicio);
-        btnDataFim = findViewById(R.id.btnDataFim);
-        btnHoraInicio = findViewById(R.id.btnHoraInicio);
-        btnHoraFim = findViewById(R.id.btnHoraFim);
         btnConfirmar = findViewById(R.id.btnConfirmar);
 
-        // dados recebidos
         String nome = getIntent().getStringExtra("nome");
         String preco = getIntent().getStringExtra("preco");
         String descricao = getIntent().getStringExtra("descricao");
@@ -56,67 +55,19 @@ public class ReservaActivity extends AppCompatActivity {
         txtPreco.setText(preco);
         txtDescricao.setText(descricao);
 
-        // pega preço numérico simples
-        if (preco != null) {
-            try {
-                precoHora = Double.parseDouble(preco.replaceAll("[^0-9]", ""));
-            } catch (Exception ignored) {}
-        }
+        try {
+            precoHora = Double.parseDouble(preco.replaceAll("[^0-9]", ""));
+        } catch (Exception ignored) {}
 
-        // DATA INICIO
-        btnDataInicio.setOnClickListener(v -> {
-            Calendar c = Calendar.getInstance();
+        // 🔥 CLIQUES NOS CARDS (TextView agora funciona como botão)
+        txtDataInicio.setOnClickListener(v -> selecionarData(true));
+        txtDataFim.setOnClickListener(v -> selecionarData(false));
+        txtHoraInicio.setOnClickListener(v -> selecionarHora(true));
 
-            new DatePickerDialog(this, (view, y, m, d) -> {
-                dataInicioCal.set(y, m, d);
-                txtDataInicio.setText(d + "/" + (m + 1) + "/" + y);
-                calcular();
-            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
-        });
+        btnConfirmar.setOnClickListener(v -> confirmarReserva());
 
-        // DATA FIM
-        btnDataFim.setOnClickListener(v -> {
-            Calendar c = Calendar.getInstance();
-
-            new DatePickerDialog(this, (view, y, m, d) -> {
-                dataFimCal.set(y, m, d);
-                txtDataFim.setText(d + "/" + (m + 1) + "/" + y);
-                calcular();
-            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
-        });
-
-        // HORA INICIO
-        btnHoraInicio.setOnClickListener(v -> {
-            Calendar c = Calendar.getInstance();
-
-            new TimePickerDialog(this, (view, h, min) -> {
-                dataInicioCal.set(Calendar.HOUR_OF_DAY, h);
-                dataInicioCal.set(Calendar.MINUTE, min);
-                txtHoraInicio.setText(String.format("%02d:%02d", h, min));
-                calcular();
-            }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true).show();
-        });
-
-        // HORA FIM
-        btnHoraFim.setOnClickListener(v -> {
-            Calendar c = Calendar.getInstance();
-
-            new TimePickerDialog(this, (view, h, min) -> {
-                dataFimCal.set(Calendar.HOUR_OF_DAY, h);
-                dataFimCal.set(Calendar.MINUTE, min);
-                txtHoraFim.setText(String.format("%02d:%02d", h, min));
-                calcular();
-            }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true).show();
-        });
-
-        // confirmar
-        btnConfirmar.setOnClickListener(v -> {
-            Toast.makeText(this, "Reserva confirmada!", Toast.LENGTH_SHORT).show();
-            finish();
-        });
-
-        // menu
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+
         bottomNav.setOnItemSelectedListener(item -> {
 
             int id = item.getItemId();
@@ -145,19 +96,139 @@ public class ReservaActivity extends AppCompatActivity {
         });
     }
 
+    private void selecionarData(boolean inicio) {
+
+        Calendar c = Calendar.getInstance();
+
+        new DatePickerDialog(this, (view, y, m, d) -> {
+
+            if (inicio) {
+                dataInicioCal.set(y, m, d);
+                txtDataInicio.setText(d + "/" + (m + 1) + "/" + y);
+            } else {
+                dataFimCal.set(y, m, d);
+                txtDataFim.setText(d + "/" + (m + 1) + "/" + y);
+            }
+
+            calcular();
+
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    private void selecionarHora(boolean inicio) {
+
+        Calendar c = Calendar.getInstance();
+
+        new TimePickerDialog(this, (view, h, m) -> {
+
+            if (inicio) {
+                dataInicioCal.set(Calendar.HOUR_OF_DAY, h);
+                dataInicioCal.set(Calendar.MINUTE, m);
+                txtHoraInicio.setText(String.format(Locale.getDefault(), "%02d:%02d", h, m));
+            }
+
+            calcular();
+
+        }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true).show();
+    }
+
+    private double calcularHoras() {
+
+        long diff = dataFimCal.getTimeInMillis() - dataInicioCal.getTimeInMillis();
+
+        if (diff <= 0) return 0;
+
+        return diff / (1000.0 * 60 * 60);
+    }
+
     private void calcular() {
 
-        long diffMs = dataFimCal.getTimeInMillis() - dataInicioCal.getTimeInMillis();
+        double horas = calcularHoras();
 
-        if (diffMs <= 0) {
+        if (horas <= 0) {
             txtResumo.setText("Datas inválidas");
             return;
         }
 
-        double horas = diffMs / (1000.0 * 60 * 60);
         double total = horas * precoHora;
 
         txtResumo.setText(String.format(Locale.getDefault(),
-                "Horas: %.2f | Total: R$ %.2f", horas, total));
+                "Horas: %.1f\nTotal: R$ %.2f", horas, total));
+    }
+
+    private void confirmarReserva() {
+
+        long inicio = dataInicioCal.getTimeInMillis();
+        long fim = dataFimCal.getTimeInMillis();
+
+        if (fim <= inicio) {
+            Toast.makeText(this, "Datas inválidas", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        verificarDisponibilidade(inicio, fim, ok -> {
+
+            if (!ok) {
+                Toast.makeText(this, "Horário indisponível", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            salvarReserva(inicio, fim);
+        });
+    }
+
+    private void verificarDisponibilidade(long inicio, long fim, OnCheck callback) {
+
+        String espacoId = getIntent().getStringExtra("id");
+
+        db.collection("reservas")
+                .whereEqualTo("espacoId", espacoId)
+                .get()
+                .addOnSuccessListener(query -> {
+
+                    for (var doc : query) {
+
+                        Long i = doc.getLong("dataInicio");
+                        Long f = doc.getLong("dataFim");
+
+                        if (i == null || f == null) continue;
+
+                        boolean conflito = (inicio < f && fim > i);
+
+                        if (conflito) {
+                            callback.result(false);
+                            return;
+                        }
+                    }
+
+                    callback.result(true);
+                });
+    }
+
+    private void salvarReserva(long inicio, long fim) {
+
+        double horas = calcularHoras();
+        double total = horas * precoHora;
+
+        HashMap<String, Object> reserva = new HashMap<>();
+        reserva.put("espacoId", getIntent().getStringExtra("id"));
+        reserva.put("nomeEspaco", txtNome.getText().toString());
+        reserva.put("dataInicio", inicio);
+        reserva.put("dataFim", fim);
+        reserva.put("valorTotal", total);
+
+        db.collection("reservas")
+                .add(reserva)
+                .addOnSuccessListener(doc -> {
+                    Toast.makeText(this, "Reserva confirmada!", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
+    }
+
+    interface OnCheck {
+        void result(boolean ok);
     }
 }

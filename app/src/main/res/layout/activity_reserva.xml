@@ -4,216 +4,250 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="#FFFFFF">
 
+    <!-- CONTEÚDO -->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:fillViewport="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
-            android:orientation="vertical"
-            android:padding="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <!-- CARD ESPAÇO -->
-            <androidx.cardview.widget.CardView
+            <!-- HEADER IMÓVEL -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="6dp">
+                app:cardCornerRadius="0dp"
+                app:cardElevation="0dp">
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/txtNome"
-                        android:text="Nome"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textColor="#000000"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                    <ImageView
+                        android:id="@+id/imgPrincipal"
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"
+                        android:scaleType="centerCrop"/>
 
-                    <TextView
-                        android:id="@+id/txtPreco"
-                        android:text="Preço"
-                        android:textColor="#000000"
-                        android:textStyle="bold"
-                        android:layout_marginTop="4dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/txtDescricao"
-                        android:text="Descrição"
-                        android:textColor="#000000"
-                        android:layout_marginTop="4dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        <TextView
+                            android:id="@+id/txtNome"
+                            android:text="Nome do espaço"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            android:textColor="#222222"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:id="@+id/txtPreco"
+                            android:text="R$ 50 / hora"
+                            android:textSize="16sp"
+                            android:textColor="#4CAF50"
+                            android:layout_marginTop="4dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:id="@+id/txtDescricao"
+                            android:text="Descrição do espaço"
+                            android:textColor="#666666"
+                            android:layout_marginTop="6dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- RESUMO -->
-            <androidx.cardview.widget.CardView
+            <!-- SELETOR AIRBNB STYLE -->
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="Escolha sua reserva"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:padding="16dp"
+                android:textColor="#222222"/>
+
+            <!-- CHECK-IN -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:text="Check-in"
+                        android:textColor="#333333"
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/txtDataInicio"
+                        android:text="Selecionar"
+                        android:textColor="#777777"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- CHECK-OUT -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="12dp"
                 app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:text="Check-out"
+                        android:textColor="#333333"
+                        android:textStyle="bold"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/txtDataFim"
+                        android:text="Selecionar"
+                        android:textColor="#777777"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- HORÁRIO (OPCIONAL MAIS LIMPO) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:text="Horário"
+                        android:textStyle="bold"
+                        android:textColor="#333333"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/txtHoraInicio"
+                        android:text="--:--"
+                        android:textColor="#777777"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- RESUMO FIXO STYLE AIRBNB -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:cardCornerRadius="14dp"
                 app:cardElevation="4dp">
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="12dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:text="Resumo da Reserva"
+                        android:text="Resumo"
                         android:textStyle="bold"
-                        android:textColor="#000000"
+                        android:textSize="16sp"
+                        android:textColor="#222222"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/txtResumo"
-                        android:text="Preencha os dados"
-                        android:textColor="#000000"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp"
+                        android:text="Selecione datas para ver o preço"
+                        android:textColor="#666666"
+                        android:layout_marginTop="6dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
-
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
 
-            <!-- DATA INÍCIO -->
-            <TextView
-                android:text="Data de entrada"
-                android:textColor="#000000"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            </com.google.android.material.card.MaterialCardView>
 
-            <Button
-                android:id="@+id/btnDataInicio"
-                android:text="Selecionar data início"
-                android:backgroundTint="#2196F3"
-                android:textColor="#FFFFFF"
+            <!-- BOTÃO AIRBNB -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:padding="16dp">
 
-            <TextView
-                android:id="@+id/txtDataInicio"
-                android:text="--/--/----"
-                android:textColor="#000000"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <!-- DATA FIM -->
-            <TextView
-                android:text="Data de saída"
-                android:textColor="#000000"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <Button
-                android:id="@+id/btnDataFim"
-                android:text="Selecionar data fim"
-                android:backgroundTint="#2196F3"
-                android:textColor="#FFFFFF"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/txtDataFim"
-                android:text="--/--/----"
-                android:textColor="#000000"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <!-- HORA INÍCIO -->
-            <TextView
-                android:text="Hora de entrada"
-                android:textColor="#000000"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <Button
-                android:id="@+id/btnHoraInicio"
-                android:text="Selecionar hora início"
-                android:backgroundTint="#2196F3"
-                android:textColor="#FFFFFF"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/txtHoraInicio"
-                android:text="--:--"
-                android:textColor="#000000"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <!-- HORA FIM -->
-            <TextView
-                android:text="Hora de saída"
-                android:textColor="#000000"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <Button
-                android:id="@+id/btnHoraFim"
-                android:text="Selecionar hora fim"
-                android:backgroundTint="#2196F3"
-                android:textColor="#FFFFFF"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/txtHoraFim"
-                android:text="--:--"
-                android:textColor="#000000"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <!-- CONFIRMAR -->
-            <Button
-                android:id="@+id/btnConfirmar"
-                android:text="Confirmar Reserva"
-                android:backgroundTint="#2196F3"
-                android:textColor="#FFFFFF"
-                android:layout_marginTop="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnConfirmar"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:text="Reservar"
+                    android:textStyle="bold"
+                    android:backgroundTint="@color/primary"
+                    android:textColor="#FFFFFF"
+                    app:cornerRadius="12dp"/>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
 
+    <!-- BOTTOM NAV -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:menu="@menu/menu_bottom"
         app:labelVisibilityMode="labeled"
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/nav_item_color"
+        android:background="@color/primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

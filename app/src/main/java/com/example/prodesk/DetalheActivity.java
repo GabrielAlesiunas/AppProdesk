@@ -5,11 +5,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class DetalheActivity extends AppCompatActivity {
@@ -59,16 +61,12 @@ public class DetalheActivity extends AppCompatActivity {
                     nome.setText(e.getNome());
                     descricao.setText(e.getDescricao());
 
-                    // 💰 preço formatado
+                    // 💰 formato correto
                     preco.setText("R$ " + e.getPreco() + " /H");
 
                     avaliacao.setText("⭐ 4.8 / 5");
 
-                    String donoNome = e.getDonoNome();
-                    if (donoNome == null || donoNome.isEmpty()) {
-                        donoNome = "admin";
-                    }
-                    dono.setText(donoNome);
+                    dono.setText(e.getDonoNome() != null ? e.getDonoNome() : "admin");
 
                     opinioes.setText("Sem avaliações ainda");
 
@@ -77,6 +75,19 @@ public class DetalheActivity extends AppCompatActivity {
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         img.setImageBitmap(bmp);
                     }
+
+                    // 🔥 BOTÃO RESERVAR
+                    reservar.setOnClickListener(v -> {
+
+                        Intent intent = new Intent(DetalheActivity.this, ReservaActivity.class);
+
+                        intent.putExtra("nome", e.getNome());
+                        intent.putExtra("preco", e.getPreco());
+                        intent.putExtra("descricao", e.getDescricao());
+
+                        startActivity(intent);
+                    });
+
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(this, "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show()

@@ -49,9 +49,10 @@ public class EspacoAdapter extends RecyclerView.Adapter<EspacoAdapter.ViewHolder
 
         // 🔥 CLIQUE DETALHE
         holder.btn.setOnClickListener(v -> {
-            Intent intent = new Intent(context, DetalheActivity.class);
+
+            Intent intent = new Intent(v.getContext(), DetalheActivity.class);
             intent.putExtra("id", e.getId());
-            context.startActivity(intent);
+            v.getContext().startActivity(intent);
         });
     }
 

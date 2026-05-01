@@ -1,168 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
-    <!-- CONTEÚDO PRINCIPAL -->
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:padding="16dp"
+        <!-- IMAGEM -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp">
 
-            <!-- IMAGEM -->
-            <com.google.android.material.card.MaterialCardView
+            <ImageView
+                android:id="@+id/imgPrincipal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="6dp">
+                android:layout_height="220dp"
+                android:scaleType="centerCrop"/>
+        </com.google.android.material.card.MaterialCardView>
 
-                <ImageView
-                    android:id="@+id/imgPrincipal"
-                    android:layout_width="match_parent"
-                    android:layout_height="220dp"
-                    android:scaleType="centerCrop"/>
-            </com.google.android.material.card.MaterialCardView>
+        <!-- NOME -->
+        <TextView
+            android:id="@+id/nomeEspaco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nome do espaço"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"
+            android:textColor="#1E1E1E"/>
 
-            <!-- NOME -->
-            <TextView
-                android:id="@+id/nomeEspaco"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nome do espaço"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:layout_marginTop="12dp"
-                android:textColor="#1E1E1E"/>
+        <!-- AVALIAÇÃO -->
+        <TextView
+            android:id="@+id/avaliacao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⭐ 4.8 / 5"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:textColor="#FF9800"/>
 
-            <!-- AVALIAÇÃO -->
-            <TextView
-                android:id="@+id/avaliacao"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="⭐ 4.8 / 5"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp"
-                android:textColor="#FF9800"/>
+        <!-- PREÇO -->
+        <TextView
+            android:id="@+id/preco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="R$ 50 /hora"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:textColor="#2E7D32"/>
 
-            <!-- PREÇO -->
-            <TextView
-                android:id="@+id/preco"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="R$ 50 /H"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginTop="8dp"
-                android:textColor="#2E7D32"/>
+        <!-- DESCRIÇÃO (CARD) -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="3dp">
 
-            <!-- DESCRIÇÃO -->
             <TextView
                 android:id="@+id/descricao"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Descrição do espaço"
-                android:layout_marginTop="8dp"
-                android:textColor="#555555"/>
-
-            <!-- COMODIDADES -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Comodidades"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:layout_marginTop="16dp"
-                android:textColor="#333333"/>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:background="#F5F5F5"
-                android:padding="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Wi-Fi"
-                    android:padding="6dp"
-                    android:background="#EEEEEE"
-                    android:layout_marginEnd="6dp"
-                    android:textColor="#333333"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Café"
-                    android:padding="6dp"
-                    android:background="#EEEEEE"
-                    android:textColor="#333333"/>
-            </LinearLayout>
-
-            <!-- DONO -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dono"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
-                android:textColor="#333333"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="6dp"
-                android:background="#F5F5F5"
-                android:padding="10dp">
-
-                <TextView
-                    android:id="@+id/dono"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="admin"
-                    android:layout_marginStart="10dp"
-                    android:textSize="16sp"
-                    android:textColor="#1E1E1E"/>
-            </LinearLayout>
-
-            <!-- OPINIÕES -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Opiniões"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp"
-                android:textColor="#333333"/>
-
-            <TextView
-                android:id="@+id/opinioes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nenhuma opinião ainda"
-                android:layout_marginTop="6dp"
-                android:textColor="#666666"/>
-
-            <!-- BOTÃO -->
-            <Button
-                android:id="@+id/btnReservar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Reservar"
-                android:layout_marginTop="20dp"
-                android:backgroundTint="@color/primary"
-                android:textColor="#FFFFFF"/>
+                android:padding="12dp"
+                android:text="Descrição do espaço"
+                android:textColor="#555555"/>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- COMODIDADES -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Comodidades"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"
+            android:textColor="#333333"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wi-Fi"
+                android:padding="8dp"
+                android:background="@drawable/bg_tag"
+                android:layout_marginEnd="6dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Café"
+                android:padding="8dp"
+                android:background="@drawable/bg_tag"/>
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+
+        <!-- DONO -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dono"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:textColor="#333333"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp"
+            android:padding="10dp"
+            android:background="#F5F5F5">
+
+            <TextView
+                android:id="@+id/dono"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="admin"
+                android:layout_marginStart="10dp"
+                android:textSize="16sp"
+                android:textColor="#1E1E1E"/>
+        </LinearLayout>
+
+        <!-- OPINIÕES -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Opiniões"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:textColor="#333333"/>
+
+        <TextView
+            android:id="@+id/opinioes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nenhuma opinião ainda"
+            android:layout_marginTop="6dp"
+            android:textColor="#666666"/>
+
+        <!-- BOTÃO -->
+        <Button
+            android:id="@+id/btnReservar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reservar"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/primary"
+            android:textColor="#FFFFFF"/>
+    </LinearLayout>
+
+</ScrollView>

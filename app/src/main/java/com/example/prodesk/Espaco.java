@@ -8,6 +8,7 @@ public class Espaco {
     private String preco;
     private String imagem;
     private String donoNome;
+
     private double latitude;
     private double longitude;
 
@@ -31,9 +32,19 @@ public class Espaco {
     public String getDonoNome() { return donoNome; }
     public void setDonoNome(String donoNome) { this.donoNome = donoNome; }
 
-    public double getLatitude() { return latitude; }
-    public void setLatitude(double latitude) { this.latitude = latitude; }
+    public double getLatitude() {
+        return latitude;
+    }
 
-    public double getLongitude() { return longitude; }
-    public void setLongitude(double longitude) { this.longitude = longitude; }
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 }
