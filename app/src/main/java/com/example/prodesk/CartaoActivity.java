@@ -91,7 +91,27 @@ public class CartaoActivity extends AppCompatActivity {
         }
 
         if (!validade.matches("(0[1-9]|1[0-2])/[0-9]{2}")) {
-            edtValidade.setError("Ex: 05/28");
+            edtValidade.setError("Formato inválido (MM/AA)");
+            return;
+        }
+
+        // 🔥 valida se já venceu
+        try {
+            String[] partes = validade.split("/");
+            int mes = Integer.parseInt(partes[0]);
+            int ano = Integer.parseInt(partes[1]) + 2000;
+
+            Calendar hoje = Calendar.getInstance();
+            int mesAtual = hoje.get(Calendar.MONTH) + 1; // começa em 0
+            int anoAtual = hoje.get(Calendar.YEAR);
+
+            if (ano < anoAtual || (ano == anoAtual && mes < mesAtual)) {
+                edtValidade.setError("Cartão vencido");
+                return;
+            }
+
+        } catch (Exception e) {
+            edtValidade.setError("Data inválida");
             return;
         }
 
@@ -272,7 +292,12 @@ public class CartaoActivity extends AppCompatActivity {
 
                 String str = s.toString().replaceAll("/", "");
 
-                if (str.length() >= 2) {
+                // 🔥 LIMITA PARA 4 NÚMEROS (MM + AA)
+                if (str.length() > 4) {
+                    str = str.substring(0, 4);
+                }
+
+                if (str.length() >= 3) {
                     str = str.substring(0, 2) + "/" + str.substring(2);
                 }
 
