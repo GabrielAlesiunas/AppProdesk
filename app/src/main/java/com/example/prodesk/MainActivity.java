@@ -17,6 +17,9 @@ import org.osmdroid.views.overlay.Marker;
 
 import java.util.ArrayList;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.net.Uri;
+
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView recycler;
@@ -35,6 +38,12 @@ public class MainActivity extends AppCompatActivity {
         );
 
         setContentView(R.layout.activity_main);
+
+        FloatingActionButton btnChatbot = findViewById(R.id.btnChatbot);
+
+        btnChatbot.setOnClickListener(v -> {
+            abrirChatbot();
+        });
 
         db = FirebaseFirestore.getInstance();
 
@@ -117,5 +126,11 @@ public class MainActivity extends AppCompatActivity {
 
                     map.invalidate();
                 });
+    }
+
+    private void abrirChatbot() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("https://cdn.botpress.cloud/webchat/v3.6/shareable.html?configUrl=https://files.bpcontent.cloud/2026/04/14/20/20260414201338-DH6KUU8V.json"));
+        startActivity(intent);
     }
 }
