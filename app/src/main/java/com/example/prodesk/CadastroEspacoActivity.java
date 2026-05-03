@@ -69,7 +69,34 @@ public class CadastroEspacoActivity extends AppCompatActivity {
         btnSalvar.setOnClickListener(v -> salvarEspaco());
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+
         bottomNav.setSelectedItemId(R.id.nav_CadEspacos);
+
+        bottomNav.setOnItemSelectedListener(item -> {
+
+            int id = item.getItemId();
+
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(this, MainActivity.class));
+                return true;
+            }
+
+            if (id == R.id.nav_reservas) {
+                startActivity(new Intent(this, HistoricoReservasActivity.class));
+                return true;
+            }
+
+            if (id == R.id.nav_CadEspacos) {
+                return true; // já está nessa tela
+            }
+
+            if (id == R.id.nav_perfil) {
+                startActivity(new Intent(this, PerfilActivity.class));
+                return true;
+            }
+
+            return false;
+        });
     }
 
     @Override

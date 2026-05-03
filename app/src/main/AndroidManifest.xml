@@ -5,8 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" /> <!-- LOCALIZAÇÃO -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
 
     <application
         android:allowBackup="true"
@@ -16,9 +16,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.ProDesk">
-
+        android:theme="@style/Theme.ProDesk"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".AvaliacaoActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
@@ -47,9 +49,9 @@
             android:name=".DetalheActivity"
             android:exported="false" />
         <activity android:name=".HistoricoReservasActivity" />
-        <activity android:name=".CartaoActivity"/>
-        <activity android:name=".SenhaActivity"/>
-        <activity android:name=".RecuperarSenhaActivity"/>
+        <activity android:name=".CartaoActivity" />
+        <activity android:name=".SenhaActivity" />
+        <activity android:name=".RecuperarSenhaActivity" />
         <activity android:name=".CadastroEspacoActivity" />
     </application>
 

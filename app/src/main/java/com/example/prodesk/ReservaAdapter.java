@@ -1,6 +1,7 @@
 package com.example.prodesk;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -79,7 +80,14 @@ public class ReservaAdapter extends RecyclerView.Adapter<ReservaAdapter.ViewHold
         }
 
         // BOTÃO AVALIAR
-        holder.btnAvaliar.setOnClickListener(v -> mostrarDialog(v, r.nomeEspaco));
+        holder.btnAvaliar.setOnClickListener(v -> {
+
+            Intent intent = new Intent(v.getContext(), AvaliacaoActivity.class);
+            intent.putExtra("id", r.espacoId);
+            intent.putExtra("nome", r.nomeEspaco);
+            v.getContext().startActivity(intent);
+
+        });
     }
 
     @Override

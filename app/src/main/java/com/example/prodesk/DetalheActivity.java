@@ -114,5 +114,52 @@ public class DetalheActivity extends AppCompatActivity {
 
             startActivity(intent);
         });
+
+        carregarAvaliacoes(doc.getId());
+    }
+
+    private void carregarAvaliacoes(String espacoId) {
+
+        db.collection("avaliacoes")
+                .whereEqualTo("espacoId", espacoId)
+                .get()
+                .addOnSuccessListener(query -> {
+
+                    if (query.isEmpty()) {
+                        avaliacao.setText("⭐ 0.0 / 5");
+                        opinioes.setText("Nenhuma avaliação ainda");
+                        return;
+                    }
+
+                    double soma = 0;
+                    int total = query.size();
+
+                    StringBuilder comentarios = new StringBuilder();
+
+                    for (DocumentSnapshot doc : query.getDocuments()) {
+
+                        Double nota = doc.getDouble("nota");
+                        String comentario = doc.getString("comentario");
+
+                        if (nota != null) soma += nota;
+
+                        if (comentario != null && !comentario.isEmpty()) {
+                            comentarios.append("• ").append(comentario).append("\n\n");
+                        }
+                    }
+
+                    double media = soma / total;
+
+                    avaliacao.setText("⭐ " + String.format("%.1f", media) + " / 5");
+
+                    if (comentarios.length() > 0) {
+                        opinioes.setText(comentarios.toString());
+                    } else {
+                        opinioes.setText("Sem comentários");
+                    }
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Erro ao carregar avaliações", Toast.LENGTH_SHORT).show()
+                );
     }
 }

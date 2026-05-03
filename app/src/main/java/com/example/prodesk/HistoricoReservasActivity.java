@@ -76,6 +76,7 @@ public class HistoricoReservasActivity extends AppCompatActivity {
 
                         ReservaModel r = new ReservaModel();
 
+                        r.espacoId = doc.getString("espacoId");
                         r.nomeEspaco = doc.getString("nomeEspaco");
                         r.dataInicio = doc.getLong("dataInicio");
                         r.dataFim = doc.getLong("dataFim");
