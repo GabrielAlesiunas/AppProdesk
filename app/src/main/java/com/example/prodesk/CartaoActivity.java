@@ -232,6 +232,10 @@ public class CartaoActivity extends AppCompatActivity {
 
                 String str = s.toString().replaceAll(" ", "");
 
+                if (str.length() > 16) {
+                    str = str.substring(0, 16);
+                }
+
                 StringBuilder formatted = new StringBuilder();
 
                 for (int i = 0; i < str.length(); i++) {
