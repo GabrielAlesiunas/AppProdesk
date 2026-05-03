@@ -3,33 +3,67 @@
     android:background="#FFFFFF"
     android:padding="12dp"
     android:layout_marginBottom="12dp"
+    android:elevation="4dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <!-- IMAGEM -->
+    <ImageView
+        android:id="@+id/imgEspaco"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:scaleType="centerCrop"
+        android:src="@android:color/darker_gray"/>
+
+    <!-- NOME -->
     <TextView
         android:id="@+id/txtNome"
         android:textStyle="bold"
         android:textSize="18sp"
         android:textColor="#000"
+        android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <!-- DATA -->
     <TextView
         android:id="@+id/txtData"
         android:textColor="#555"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <!-- HORÁRIO -->
     <TextView
-        android:id="@+id/txtHora"
+        android:id="@+id/txtHorario"
         android:textColor="#555"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <!-- VALOR -->
     <TextView
         android:id="@+id/txtValor"
         android:textStyle="bold"
         android:textColor="#2E7D32"
+        android:layout_marginTop="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/txtPagamento"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:layout_marginTop="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- BOTÃO -->
+    <Button
+        android:id="@+id/btnAvaliar"
+        android:text="Avaliar ⭐"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/primary"
+        android:textColor="@color/textOnPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>

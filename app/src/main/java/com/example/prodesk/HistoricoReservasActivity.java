@@ -80,6 +80,8 @@ public class HistoricoReservasActivity extends AppCompatActivity {
                         r.dataInicio = doc.getLong("dataInicio");
                         r.dataFim = doc.getLong("dataFim");
                         r.valorTotal = doc.getDouble("valorTotal");
+                        r.imagem = doc.getString("imagem");
+                        r.pagamento = doc.getString("pagamento");
 
                         lista.add(r);
                     }

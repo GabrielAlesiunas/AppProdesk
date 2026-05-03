@@ -1,5 +1,6 @@
 package com.example.prodesk;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,16 +17,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.List;
 
 public class ReservaActivity extends AppCompatActivity {
 
     TextView txtNome, txtPreco, txtDescricao;
-    TextView txtDataInicio, txtDataFim, txtHoraInicio, txtHoraFim, txtResumo;
+    TextView txtDataInicio, txtDataFim, txtHoraInicio, txtHoraFim, txtResumo, txtCartaoSelecionado;
     ImageView imgEspaco;
     MaterialButton btnConfirmar;
 
@@ -35,6 +40,12 @@ public class ReservaActivity extends AppCompatActivity {
 
     FirebaseFirestore db;
     String espacoId;
+
+    String imagemBase64 = "";
+
+    RadioGroup radioPagamento;
+    String formaPagamento = "";
+    String cartaoSelecionado = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +68,8 @@ public class ReservaActivity extends AppCompatActivity {
         txtResumo = findViewById(R.id.txtResumo);
 
         imgEspaco = findViewById(R.id.imgPrincipal);
+        radioPagamento = findViewById(R.id.radioPagamento);
+        txtCartaoSelecionado = findViewById(R.id.txtCartaoSelecionado);
         btnConfirmar = findViewById(R.id.btnConfirmar);
 
         espacoId = getIntent().getStringExtra("id");
@@ -75,11 +88,23 @@ public class ReservaActivity extends AppCompatActivity {
         txtHoraInicio.setOnClickListener(v -> selecionarHora(true));
         txtHoraFim.setOnClickListener(v -> selecionarHora(false));
 
+        // 🔥 ESCUTA PAGAMENTO
+        radioPagamento.setOnCheckedChangeListener((group, checkedId) -> {
+
+            if (checkedId == R.id.radioPix) {
+                formaPagamento = "PIX";
+                mostrarQRPix();
+            }
+
+            if (checkedId == R.id.radioCartao) {
+                formaPagamento = "Cartão";
+                mostrarCartoes();
+            }
+        });
+
         btnConfirmar.setOnClickListener(v -> confirmarReserva());
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-
-        bottomNav.setSelectedItemId(R.id.nav_home);
 
         bottomNav.setOnItemSelectedListener(item -> {
 
@@ -109,9 +134,6 @@ public class ReservaActivity extends AppCompatActivity {
         });
     }
 
-    // =========================
-    // CARREGAR ESPAÇO + IMAGEM
-    // =========================
     private void carregarEspaco(String id) {
 
         db.collection("espacos").document(id)
@@ -128,6 +150,8 @@ public class ReservaActivity extends AppCompatActivity {
                     txtNome.setText(nome);
                     txtDescricao.setText(descricao);
                     txtPreco.setText("R$ " + preco + " /h");
+
+                    imagemBase64 = imagem;
 
                     try {
                         String clean = preco.replaceAll("[^0-9]", "");
@@ -148,20 +172,16 @@ public class ReservaActivity extends AppCompatActivity {
                 });
     }
 
-    // =========================
-    // SELEÇÃO DE DATA
-    // =========================
     private void selecionarData(boolean inicio) {
-
         Calendar c = Calendar.getInstance();
 
         new DatePickerDialog(this, (view, y, m, d) -> {
 
             if (inicio) {
-                dataInicioCal.set(y, m, d, 0, 0, 0);
+                dataInicioCal.set(y, m, d, 0, 0);
                 txtDataInicio.setText(d + "/" + (m + 1) + "/" + y);
             } else {
-                dataFimCal.set(y, m, d, 0, 0, 0);
+                dataFimCal.set(y, m, d, 0, 0);
                 txtDataFim.setText(d + "/" + (m + 1) + "/" + y);
             }
 
@@ -170,9 +190,6 @@ public class ReservaActivity extends AppCompatActivity {
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    // =========================
-    // SELEÇÃO DE HORA
-    // =========================
     private void selecionarHora(boolean inicio) {
 
         Calendar c = Calendar.getInstance();
@@ -182,18 +199,11 @@ public class ReservaActivity extends AppCompatActivity {
             if (inicio) {
                 dataInicioCal.set(Calendar.HOUR_OF_DAY, h);
                 dataInicioCal.set(Calendar.MINUTE, m);
-                dataInicioCal.set(Calendar.SECOND, 0);
-                dataInicioCal.set(Calendar.MILLISECOND, 0);
-
-                txtHoraInicio.setText(String.format(Locale.getDefault(), "%02d:%02d", h, m));
-
+                txtHoraInicio.setText(String.format("%02d:%02d", h, m));
             } else {
                 dataFimCal.set(Calendar.HOUR_OF_DAY, h);
                 dataFimCal.set(Calendar.MINUTE, m);
-                dataFimCal.set(Calendar.SECOND, 0);
-                dataFimCal.set(Calendar.MILLISECOND, 0);
-
-                txtHoraFim.setText(String.format(Locale.getDefault(), "%02d:%02d", h, m));
+                txtHoraFim.setText(String.format("%02d:%02d", h, m));
             }
 
             calcular();
@@ -201,85 +211,132 @@ public class ReservaActivity extends AppCompatActivity {
         }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true).show();
     }
 
-    // =========================
-    // CÁLCULO DE HORAS
-    // =========================
     private double calcularHoras() {
-
         long inicio = dataInicioCal.getTimeInMillis();
         long fim = dataFimCal.getTimeInMillis();
 
-        if (inicio <= 0 || fim <= 0) return 0;
         if (fim <= inicio) return 0;
 
-        double horas = (fim - inicio) / 3600000.0;
-
-        if (horas < 0.25) return 0;
-
-        return horas;
+        return (fim - inicio) / 3600000.0;
     }
 
-    // =========================
-    // RESUMO
-    // =========================
     private void calcular() {
 
         double horas = calcularHoras();
 
         if (horas <= 0) {
-            txtResumo.setText("Selecione data e hora válidas");
+            txtResumo.setText("Datas inválidas");
             return;
         }
 
         double total = horas * precoHora;
 
-        txtResumo.setText(
-                String.format(Locale.getDefault(),
-                        "Horas: %.2f\nTotal: R$ %.2f",
-                        horas, total)
-        );
+        txtResumo.setText("Horas: " + horas + "\nTotal: R$ " + total);
     }
 
-    // =========================
-    // CONFIRMAR RESERVA
-    // =========================
+    // 🔥 LISTAR CARTÕES
+    private void mostrarCartoes() {
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        db.collection("usuarios")
+                .document(userId)
+                .collection("cartoes")
+                .get()
+                .addOnSuccessListener(query -> {
+
+                    if (query.isEmpty()) {
+                        Toast.makeText(this, "Nenhum cartão cadastrado", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    List<String> lista = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : query.getDocuments()) {
+
+                        String nome = doc.getString("nome");
+                        String numero = doc.getString("numero");
+
+                        if (nome == null) nome = "Sem nome";
+                        if (numero == null) numero = "Sem número";
+
+                        lista.add(nome + " - " + numero);
+                    }
+
+                    String[] itens = lista.toArray(new String[0]);
+
+                    new AlertDialog.Builder(this)
+                            .setTitle("Selecione o cartão")
+                            .setItems(itens, (dialog, which) -> {
+
+                                cartaoSelecionado = itens[which];
+
+                                // 🔥 MOSTRAR NA TELA
+                                txtCartaoSelecionado.setText("Cartão: " + cartaoSelecionado);
+
+                                Toast.makeText(this,
+                                        "Selecionado: " + cartaoSelecionado,
+                                        Toast.LENGTH_SHORT).show();
+                            })
+                            .show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Erro: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+    }
+
+    // 🔥 QR PIX
+    private void mostrarQRPix() {
+
+        ImageView qr = new ImageView(this);
+        qr.setImageResource(R.drawable.qrcode);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Pague com PIX")
+                .setMessage("Escaneie o QR Code abaixo")
+                .setView(qr)
+                .setPositiveButton("Já paguei", null)
+                .show();
+    }
+
     private void confirmarReserva() {
 
-        if (dataInicioCal.getTimeInMillis() <= 0 || dataFimCal.getTimeInMillis() <= 0) {
-            Toast.makeText(this, "Selecione data e hora", Toast.LENGTH_SHORT).show();
+        long inicio = dataInicioCal.getTimeInMillis();
+        long fim = dataFimCal.getTimeInMillis();
+
+        if (fim <= inicio) {
+            Toast.makeText(this, "Datas inválidas", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (dataFimCal.getTimeInMillis() <= dataInicioCal.getTimeInMillis()) {
-            Toast.makeText(this, "Saída deve ser depois da entrada", Toast.LENGTH_SHORT).show();
+        if (formaPagamento.isEmpty()) {
+            Toast.makeText(this, "Selecione forma de pagamento", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        double horas = calcularHoras();
-
-        if (horas <= 0) {
-            Toast.makeText(this, "Intervalo inválido", Toast.LENGTH_SHORT).show();
+        if (formaPagamento.equals("Cartão") && cartaoSelecionado.isEmpty()) {
+            Toast.makeText(this, "Selecione um cartão", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        double total = horas * precoHora;
 
         HashMap<String, Object> reserva = new HashMap<>();
         reserva.put("espacoId", espacoId);
         reserva.put("nomeEspaco", txtNome.getText().toString());
-        reserva.put("dataInicio", dataInicioCal.getTimeInMillis());
-        reserva.put("dataFim", dataFimCal.getTimeInMillis());
-        reserva.put("horas", horas);
-        reserva.put("valorTotal", total);
+        reserva.put("dataInicio", inicio);
+        reserva.put("dataFim", fim);
+        reserva.put("valorTotal", calcularHoras() * precoHora);
+        reserva.put("imagem", imagemBase64);
+        reserva.put("pagamento", formaPagamento);
+
+        if (formaPagamento.equals("Cartão")) {
+            reserva.put("cartao", cartaoSelecionado);
+        }
 
         db.collection("reservas")
                 .add(reserva)
                 .addOnSuccessListener(doc -> {
                     Toast.makeText(this, "Reserva confirmada!", Toast.LENGTH_SHORT).show();
                     finish();
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                );
+                });
     }
 }

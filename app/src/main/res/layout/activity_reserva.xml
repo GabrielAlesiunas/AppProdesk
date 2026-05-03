@@ -256,6 +256,47 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:text="Forma de pagamento"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/radioPagamento"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/radioCartao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cartão cadastrado"
+                    android:textColor="#000000" />
+
+                <RadioButton
+                    android:id="@+id/radioPix"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pix"
+                    android:textColor="#000000" />
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/txtCartaoSelecionado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nenhum cartão selecionado"
+                android:textColor="#555555"
+                android:paddingStart="16dp"
+                android:paddingBottom="8dp"/>
+
             <!-- BOTÃO -->
             <LinearLayout
                 android:layout_width="match_parent"

@@ -1,9 +1,13 @@
 package com.example.prodesk;
 
+import android.app.AlertDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.*;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +21,7 @@ public class ReservaAdapter extends RecyclerView.Adapter<ReservaAdapter.ViewHold
 
     List<ReservaModel> lista;
 
-    public ReservaAdapter(HistoricoReservasActivity historicoReservasActivity, List<ReservaModel> lista) {
+    public ReservaAdapter(Object context, List<ReservaModel> lista) {
         this.lista = lista;
     }
 
@@ -36,13 +40,46 @@ public class ReservaAdapter extends RecyclerView.Adapter<ReservaAdapter.ViewHold
 
         ReservaModel r = lista.get(position);
 
+        // NOME
         holder.nome.setText(r.nomeEspaco);
 
+        // DATA
         holder.data.setText(
-                formatar(r.dataInicio) + " até " + formatar(r.dataFim)
+                formatarData(r.dataInicio) + " até " + formatarData(r.dataFim)
         );
 
-        holder.valor.setText("R$ " + r.valorTotal);
+        // HORÁRIO
+        holder.horario.setText(
+                formatarHora(r.dataInicio) + " - " + formatarHora(r.dataFim)
+        );
+
+        // VALOR
+        holder.valor.setText("Total: R$ " + String.format(Locale.getDefault(), "%.2f", r.valorTotal));
+
+        // IMAGEM BASE64
+        if (r.imagem != null && !r.imagem.isEmpty()) {
+            try {
+                String clean = r.imagem.replace("\n", "").replace(" ", "");
+                byte[] bytes = Base64.decode(clean, Base64.DEFAULT);
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                holder.img.setImageBitmap(bmp);
+            } catch (Exception e) {
+                holder.img.setImageResource(android.R.color.darker_gray);
+            }
+        } else {
+            holder.img.setImageResource(android.R.color.darker_gray);
+        }
+
+        if ("PIX".equals(r.pagamento)) {
+            holder.txtPagamento.setText("💸 Pago via Pix");
+        } else if ("Cartão".equals(r.pagamento)) {
+            holder.txtPagamento.setText("💳 Pago no cartão");
+        } else {
+            holder.txtPagamento.setText("Pagamento não informado");
+        }
+
+        // BOTÃO AVALIAR
+        holder.btnAvaliar.setOnClickListener(v -> mostrarDialog(v, r.nomeEspaco));
     }
 
     @Override
@@ -52,20 +89,74 @@ public class ReservaAdapter extends RecyclerView.Adapter<ReservaAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView nome, data, valor;
+        TextView nome, data, horario, valor, txtPagamento; // 🔥 adiciona aqui
+        ImageView img;
+        Button btnAvaliar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             nome = itemView.findViewById(R.id.txtNome);
             data = itemView.findViewById(R.id.txtData);
+            horario = itemView.findViewById(R.id.txtHorario);
             valor = itemView.findViewById(R.id.txtValor);
+            img = itemView.findViewById(R.id.imgEspaco);
+            btnAvaliar = itemView.findViewById(R.id.btnAvaliar);
+
+            txtPagamento = itemView.findViewById(R.id.txtPagamento); // 🔥 ESSENCIAL
         }
     }
 
-    private String formatar(long millis) {
-        SimpleDateFormat sdf =
-                new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-        return sdf.format(new Date(millis));
+    // =========================
+    // FORMATADORES
+    // =========================
+    private String formatarData(long millis) {
+        return new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                .format(new Date(millis));
+    }
+
+    private String formatarHora(long millis) {
+        return new SimpleDateFormat("HH:mm", Locale.getDefault())
+                .format(new Date(millis));
+    }
+
+    // =========================
+    // DIALOG DE AVALIAÇÃO
+    // =========================
+    private void mostrarDialog(View v, String nomeEspaco) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+        builder.setTitle("Avaliar " + nomeEspaco);
+
+        LinearLayout layout = new LinearLayout(v.getContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(40, 20, 40, 10);
+
+        EditText comentario = new EditText(v.getContext());
+        comentario.setHint("Digite sua opinião...");
+        layout.addView(comentario);
+
+        RatingBar rating = new RatingBar(v.getContext());
+        rating.setNumStars(5);
+        rating.setStepSize(1);
+        layout.addView(rating);
+
+        builder.setView(layout);
+
+        builder.setPositiveButton("Enviar", (dialog, which) -> {
+
+            float nota = rating.getRating();
+            String texto = comentario.getText().toString();
+
+            Toast.makeText(v.getContext(),
+                    "Avaliação enviada\nNota: " + nota,
+                    Toast.LENGTH_SHORT).show();
+
+            // 🔥 AQUI você pode salvar no Firestore depois
+        });
+
+        builder.setNegativeButton("Cancelar", null);
+
+        builder.show();
     }
 }

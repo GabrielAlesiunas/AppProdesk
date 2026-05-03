@@ -7,5 +7,11 @@ public class ReservaModel {
     public Long dataFim;
     public Double valorTotal;
 
+    public String imagem;
+
+    String imagemBase64 = "";
+
+    public String pagamento;
+
     public ReservaModel() {}
 }
