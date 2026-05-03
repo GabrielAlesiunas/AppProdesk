@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void abrirChatbot() {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("https://cdn.botpress.cloud/webchat/v3.6/shareable.html?configUrl=https://files.bpcontent.cloud/2026/04/14/20/20260414201338-DH6KUU8V.json"));
+        intent.setData(Uri.parse("https://cdn.botpress.cloud/webchat/v3.6/shareable.html?configUrl=https://files.bpcontent.cloud/2026/05/03/12/20260503121853-61DFXM6I.json"));
         startActivity(intent);
     }
 }
