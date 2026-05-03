@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -132,7 +134,7 @@ public class CadastroEspacoActivity extends AppCompatActivity {
     }
 
     private void salvarEspaco() {
-
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String nome = edtNome.getText().toString();
         String descricao = edtDescricao.getText().toString();
         String preco = edtPreco.getText().toString();
@@ -162,6 +164,7 @@ public class CadastroEspacoActivity extends AppCompatActivity {
                     : "";
 
             Map<String, Object> dados = new HashMap<>();
+            dados.put("donoId", userId);
             dados.put("nome", nome);
             dados.put("descricao", descricao);
             dados.put("preco", preco);

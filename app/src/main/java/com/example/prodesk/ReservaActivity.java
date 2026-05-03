@@ -217,7 +217,10 @@ public class ReservaActivity extends AppCompatActivity {
 
         if (fim <= inicio) return 0;
 
-        return (fim - inicio) / 3600000.0;
+        double horas = (fim - inicio) / 3600000.0;
+
+        // 🔥 arredonda para 2 casas
+        return Math.round(horas * 100.0) / 100.0;
     }
 
     private void calcular() {
@@ -231,13 +234,21 @@ public class ReservaActivity extends AppCompatActivity {
 
         double total = horas * precoHora;
 
-        txtResumo.setText("Horas: " + horas + "\nTotal: R$ " + total);
+        txtResumo.setText(
+                "Horas: " + String.format("%.2f", horas) +
+                        "\nTotal: R$ " + String.format("%.2f", total)
+        );
     }
 
     // 🔥 LISTAR CARTÕES
     private void mostrarCartoes() {
 
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(this, "Faça login primeiro", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         db.collection("usuarios")
                 .document(userId)
@@ -320,6 +331,10 @@ public class ReservaActivity extends AppCompatActivity {
         }
 
         HashMap<String, Object> reserva = new HashMap<>();
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // 🔥 NOVO
+
+        reserva.put("userId", userId);
         reserva.put("espacoId", espacoId);
         reserva.put("nomeEspaco", txtNome.getText().toString());
         reserva.put("dataInicio", inicio);

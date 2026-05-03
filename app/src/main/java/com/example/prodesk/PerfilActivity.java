@@ -1,21 +1,22 @@
 package com.example.prodesk;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.widget.*;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 
 public class PerfilActivity extends AppCompatActivity {
 
@@ -41,14 +42,12 @@ public class PerfilActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // 🔒 PROTEÇÃO
         if (mAuth.getCurrentUser() == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
         }
 
-        // 🔥 VIEWS
         imgPerfil = findViewById(R.id.imgPerfil);
         btnTrocarFoto = findViewById(R.id.btnTrocarFoto);
         btnSalvar = findViewById(R.id.btnSalvar);
@@ -59,7 +58,6 @@ public class PerfilActivity extends AppCompatActivity {
         itemCartoes = findViewById(R.id.itemCartoes);
         itemSeguranca = findViewById(R.id.itemSeguranca);
 
-        // 🔥 CLIQUES
         itemCartoes.setOnClickListener(v ->
                 startActivity(new Intent(this, CartaoActivity.class))
         );
@@ -74,16 +72,13 @@ public class PerfilActivity extends AppCompatActivity {
 
         btnLogout.setOnClickListener(v -> {
             mAuth.signOut();
-            Toast.makeText(this, "Logout realizado", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         });
 
         carregarDadosUsuario();
 
-        // 🔥 MENU INFERIOR
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-
         bottomNav.setSelectedItemId(R.id.nav_perfil);
 
         bottomNav.setOnItemSelectedListener(item -> {
@@ -105,15 +100,13 @@ public class PerfilActivity extends AppCompatActivity {
                 return true;
             }
 
-            if (id == R.id.nav_perfil) {
-                return true;
-            }
-
-            return false;
+            return id == R.id.nav_perfil;
         });
     }
 
-    // 🔥 SALVAR (Firebase + Local)
+    // =========================
+    // 🔥 SALVAR DADOS
+    // =========================
     private void salvarTudo() {
 
         String nome = edtNome.getText().toString().trim();
@@ -125,72 +118,50 @@ public class PerfilActivity extends AppCompatActivity {
 
         String userId = mAuth.getCurrentUser().getUid();
 
-        // 🔹 Salva nome no Firebase
         db.collection("usuarios")
                 .document(userId)
-                .update("nome", nome)
-                .addOnSuccessListener(aVoid -> {
+                .update("nome", nome);
 
-                    // 🔹 Se tiver imagem → salva local
-                    if (imagemSelecionada != null) {
+        if (imagemSelecionada != null) {
 
-                        String caminho = salvarImagemLocal(imagemSelecionada);
+            String base64 = converterImagemBase64(imagemSelecionada);
 
-                        if (caminho != null) {
-                            salvarImagemLocalPrefs(caminho);
+            db.collection("usuarios")
+                    .document(userId)
+                    .update("foto", base64);
 
-                            Glide.with(this)
-                                    .load(caminho)
-                                    .into(imgPerfil);
-                        }
+            carregarImagemBase64(base64);
 
-                        imagemSelecionada = null;
-                    }
+            imagemSelecionada = null;
+        }
 
-                    Toast.makeText(this, "Perfil atualizado!", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Erro ao salvar nome", Toast.LENGTH_LONG).show()
-                );
+        Toast.makeText(this, "Perfil atualizado!", Toast.LENGTH_SHORT).show();
     }
 
-    // 🔥 SALVAR IMAGEM LOCAL
-    private String salvarImagemLocal(Uri uri) {
+    // =========================
+    // 🔥 CONVERTER IMAGEM
+    // =========================
+    private String converterImagemBase64(Uri uri) {
         try {
             InputStream inputStream = getContentResolver().openInputStream(uri);
 
-            String nomeArquivo = "perfil_" + System.currentTimeMillis() + ".jpg";
-            File file = new File(getFilesDir(), nomeArquivo);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
-            OutputStream outputStream = new FileOutputStream(file);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
 
-            byte[] buffer = new byte[1024];
-            int length;
+            byte[] bytes = baos.toByteArray();
 
-            while ((length = inputStream.read(buffer)) > 0) {
-                outputStream.write(buffer, 0, length);
-            }
-
-            outputStream.close();
-            inputStream.close();
-
-            return file.getAbsolutePath();
+            return Base64.encodeToString(bytes, Base64.NO_WRAP);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Erro ao salvar imagem", Toast.LENGTH_SHORT).show();
-            return null;
+            return "";
         }
     }
 
-    // 🔥 SALVAR CAMINHO DA IMAGEM
-    private void salvarImagemLocalPrefs(String caminho) {
-
-        SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
-        prefs.edit().putString("foto", caminho).apply();
-    }
-
-    // 🔥 CARREGAR DADOS DO FIREBASE
+    // =========================
+    // 🔥 CARREGAR USUÁRIO
+    // =========================
     private void carregarDadosUsuario() {
 
         String userId = mAuth.getCurrentUser().getUid();
@@ -200,56 +171,55 @@ public class PerfilActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(doc -> {
 
-                    if (doc != null && doc.exists()) {
+                    if (!doc.exists()) return;
 
-                        String nome = doc.getString("nome");
-                        String email = doc.getString("email");
+                    String nome = doc.getString("nome");
+                    String email = doc.getString("email");
+                    String foto = doc.getString("foto");
 
-                        if (nome != null)
-                            edtNome.setText(nome);
+                    if (nome != null) edtNome.setText(nome);
+                    if (email != null) txtEmail.setText(email);
 
-                        if (email != null)
-                            txtEmail.setText(email);
-
-                        // 🔥 CARREGA IMAGEM LOCAL
-                        carregarImagemLocal();
+                    if (foto != null && !foto.isEmpty()) {
+                        carregarImagemBase64(foto);
                     }
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Erro ao carregar dados", Toast.LENGTH_LONG).show()
-                );
+                });
     }
 
-    // 🔥 CARREGAR IMAGEM LOCAL
-    private void carregarImagemLocal() {
+    // =========================
+    // 🔥 CARREGAR FOTO BASE64
+    // =========================
+    private void carregarImagemBase64(String base64) {
 
-        SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
-        String foto = prefs.getString("foto", null);
+        try {
+            byte[] bytes = Base64.decode(base64, Base64.DEFAULT);
+            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
-        if (foto != null) {
-            Glide.with(this)
-                    .load(foto)
-                    .into(imgPerfil);
+            if (bmp != null) {
+                imgPerfil.setImageBitmap(bmp);
+            }
+
+        } catch (Exception e) {
+            imgPerfil.setImageResource(android.R.color.darker_gray);
         }
     }
 
-    // 📸 ABRIR GALERIA
+    // =========================
+    // 📸 GALERIA
+    // =========================
     private void abrirGaleria() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, PICK_IMAGE);
     }
 
-    // 📸 RESULTADO
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null) {
 
             imagemSelecionada = data.getData();
-
-            // preview imediato
             imgPerfil.setImageURI(imagemSelecionada);
         }
     }

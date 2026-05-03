@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -66,7 +67,10 @@ public class HistoricoReservasActivity extends AppCompatActivity {
 
     private void carregarReservas() {
 
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         db.collection("reservas")
+                .whereEqualTo("userId", userId)
                 .get()
                 .addOnSuccessListener(query -> {
 
