@@ -95,8 +95,8 @@ public class CartaoActivity extends AppCompatActivity {
             return;
         }
 
-        if (cvv.length() < 3 || cvv.length() > 4) {
-            edtCVV.setError("CVV inválido");
+        if (cvv.length() != 3) {
+            edtCVV.setError("CVV deve ter 3 dígitos");
             return;
         }
 

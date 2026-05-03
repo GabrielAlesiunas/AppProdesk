@@ -92,6 +92,7 @@
                             android:layout_weight="1"
                             android:layout_marginStart="10dp"
                             android:hint="CVV"
+                            android:maxLength="3"
                             android:inputType="numberPassword"
                             android:textColor="@color/textPrimary"
                             android:textColorHint="@color/hintColor"
