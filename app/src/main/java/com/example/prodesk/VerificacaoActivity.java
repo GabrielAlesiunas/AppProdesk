@@ -9,20 +9,13 @@ import android.widget.*;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.*;
-
-import java.util.concurrent.TimeUnit;
-
 public class VerificacaoActivity extends AppCompatActivity {
 
     EditText c1, c2, c3, c4, c5, c6;
-    Button btnSms, btnConfirmar;
+    Button btnConfirmar;
 
-    FirebaseAuth mAuth;
-
-    String verificationId;
-    String telefone;
+    // 🔐 Código fixo para teste
+    private static final String CODIGO_FIXO = "123456";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,19 +29,14 @@ public class VerificacaoActivity extends AppCompatActivity {
         c5 = findViewById(R.id.code5);
         c6 = findViewById(R.id.code6);
 
-        btnSms = findViewById(R.id.btnSms);
         btnConfirmar = findViewById(R.id.btnConfirmar);
 
-        mAuth = FirebaseAuth.getInstance();
-        telefone = getIntent().getStringExtra("telefone");
-
+        // mover foco automático
         mover(c1, c2);
         mover(c2, c3);
         mover(c3, c4);
         mover(c4, c5);
         mover(c5, c6);
-
-        btnSms.setOnClickListener(v -> enviarSms());
 
         btnConfirmar.setOnClickListener(v -> {
 
@@ -59,71 +47,23 @@ public class VerificacaoActivity extends AppCompatActivity {
                 return;
             }
 
-            if (verificationId == null) {
-                Toast.makeText(this, "Clique em enviar código primeiro", Toast.LENGTH_SHORT).show();
-                return;
+            // 🔥 valida código fixo
+            if (codigo.equals(CODIGO_FIXO)) {
+
+                SharedPreferences prefs = getSharedPreferences("app", MODE_PRIVATE);
+                prefs.edit()
+                        .putBoolean("2fa_ok", true)
+                        .apply();
+
+                Toast.makeText(this, "Verificado!", Toast.LENGTH_SHORT).show();
+
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+
+            } else {
+                Toast.makeText(this, "Código inválido", Toast.LENGTH_SHORT).show();
             }
-
-            verificarCodigo(codigo);
         });
-    }
-
-    private void enviarSms() {
-
-        PhoneAuthOptions options =
-                PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber("+5515997671792")
-                        .setTimeout(60L, TimeUnit.SECONDS)
-                        .setActivity(this)
-                        .setCallbacks(callbacks)
-                        .build();
-
-        PhoneAuthProvider.verifyPhoneNumber(options);
-    }
-
-    PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks =
-            new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
-                public void onVerificationCompleted(PhoneAuthCredential credential) {
-                    signIn(credential);
-                }
-
-                public void onVerificationFailed(FirebaseException e) {
-                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-
-                public void onCodeSent(String id, PhoneAuthProvider.ForceResendingToken token) {
-                    verificationId = id;
-                    Toast.makeText(getApplicationContext(), "Código enviado", Toast.LENGTH_SHORT).show();
-                }
-            };
-
-    private void verificarCodigo(String codigo) {
-
-        PhoneAuthCredential credential =
-                PhoneAuthProvider.getCredential(verificationId, codigo);
-
-        signIn(credential);
-    }
-
-    private void signIn(PhoneAuthCredential credential) {
-
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-
-                        SharedPreferences prefs = getSharedPreferences("app", MODE_PRIVATE);
-                        prefs.edit().putBoolean("2fa_ok", true).apply();
-
-                        Toast.makeText(this, "Verificado!", Toast.LENGTH_SHORT).show();
-
-                        startActivity(new Intent(this, MainActivity.class));
-                        finish();
-
-                    } else {
-                        Toast.makeText(this, "Erro: " + task.getException(), Toast.LENGTH_LONG).show();
-                    }
-                });
     }
 
     private void mover(EditText atual, EditText prox) {

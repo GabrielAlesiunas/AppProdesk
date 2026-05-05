@@ -38,14 +38,24 @@ public class LoginActivity extends AppCompatActivity {
 
             if (sessaoExpirada()) {
 
+                // sessão venceu → desloga
                 mAuth.signOut();
+                limpar2FA();
 
                 Toast.makeText(this,
                         "Sessão expirada, faça login novamente",
                         Toast.LENGTH_LONG).show();
 
             } else {
-                irParaHome();
+
+                SharedPreferences prefs = getSharedPreferences("app", MODE_PRIVATE);
+                boolean twoFaOk = prefs.getBoolean("2fa_ok", false);
+
+                if (twoFaOk) {
+                    irParaHome();
+                } else {
+                    irParaVerificacao();
+                }
             }
         }
 
@@ -76,9 +86,13 @@ public class LoginActivity extends AppCompatActivity {
                             // 🔥 SALVA HORÁRIO DO LOGIN
                             salvarHorarioLogin();
 
+                            // 🔒 FORÇA NOVO 2FA
+                            limpar2FA();
+
                             Toast.makeText(this, "Login realizado!", Toast.LENGTH_SHORT).show();
 
-                            irParaHome();
+                            // 👉 vai pra verificação
+                            irParaVerificacao();
 
                         } else {
                             Toast.makeText(this,
@@ -116,9 +130,23 @@ public class LoginActivity extends AppCompatActivity {
         return (agora - loginTime) > TEMPO_LIMITE;
     }
 
+    // 🔥 LIMPA 2FA (IMPORTANTE)
+    private void limpar2FA() {
+        SharedPreferences prefs = getSharedPreferences("app", MODE_PRIVATE);
+        prefs.edit()
+                .putBoolean("2fa_ok", false)
+                .apply();
+    }
+
     // 🚀 IR PRA HOME
     private void irParaHome() {
         startActivity(new Intent(this, MainActivity.class));
+        finish();
+    }
+
+    // 🔐 IR PRA VERIFICAÇÃO
+    private void irParaVerificacao() {
+        startActivity(new Intent(this, VerificacaoActivity.class));
         finish();
     }
 }
